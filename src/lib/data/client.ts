@@ -70,7 +70,7 @@ const recentClient: Client[] = [
 	},
 ];
 
-const upcomingEvents: Event[] = [
+export const upcomingEvents: Event[] = [
 	{ time: '10:00', title: 'Встреча с ООО "Технологии"', description: 'Обсуждение нового проекта' },
 	{ time: '14:30', title: 'Звонок клиенту - Строй-Инвест', description: 'Уточнение деталей по сделке' },
 	{ time: '16:00', title: 'Отправка предложения', description: 'Подготовить и отправить КП для "Дизайн-Бюро"' },
