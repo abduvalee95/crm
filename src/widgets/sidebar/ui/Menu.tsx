@@ -19,12 +19,11 @@ const Menu = () => {
 	const pathname = usePathname();
 
 	return (
-		<aside className="flex flex-col justify-between h-screen w-70 bg-card p-4 border-r">
+		<aside className="flex flex-col justify-between h-screen w-70 bg-card p-4 ">
 			{/* Title */}
 			<div>
 				<h1 className="text-white text-xl font-semibold mb-5 ml-2 pt-2">CRM Система</h1>
-				<div className="border-t border-gray-700 p-2"/>
-
+				<div className="border-t border-gray-700 p-2" />
 				<nav className="flex flex-col gap-1">
 					{items.map((item) => {
 						const isActive = pathname === item.href;
