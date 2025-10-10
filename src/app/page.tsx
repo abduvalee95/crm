@@ -1,6 +1,6 @@
 import Menu from '@/widgets/sidebar/ui/Menu';
+import ClientPage from './clients/page';
 import HomePage from './home/page';
-import DashboardPage from '@/widgets/dashboard/ui/page'
 
 export default function Home() {
 	return (

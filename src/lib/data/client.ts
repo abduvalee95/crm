@@ -1,41 +1,42 @@
 
+import { ClientStatus } from '../enums/status'
 import { Client, Event } from '../types/types';
-const recentClients: Client[] = [
+export const recentClients: Client[] = [
 	{
 		name: 'Иван Петров',
 		company: 'ООО "Технологии"',
 		email: 'ivan.p@tech.com',
-		status: 'active',
-		lastContact: '2 дня назад',
+		status: ClientStatus.active,
+		number: '+7848350987',
 		avatar: '/avatars/01.png',
 	},
 	{
 		name: 'Мария Сидорова',
 		company: 'Строй-Инвест',
 		email: 'm.sidorova@stroy.ru',
-		status: 'new',
-		lastContact: '5 часов назад',
+		status:  ClientStatus.active,
+		number: '+704135445',
 		avatar: '/avatars/02.png',
 	},
 	{
 		name: 'Алексей Козлов',
 		company: 'Дизайн-Бюро',
 		email: 'alex@design.io',
-		status: 'active',
-		lastContact: 'вчера',
+		status:  ClientStatus.inactive,
+		number: '+71452455445',
 		avatar: '/avatars/03.png',
 	},
 	{
 		name: 'Елена Новикова',
 		company: 'МаркетПлюс',
 		email: 'elena.n@market.com',
-		status: 'inactive',
-		lastContact: '1 неделя назад',
+		status:  ClientStatus.new,
+		number: '+7345235445',
 		avatar: '/avatars/04.png',
 	},
 ];
 
-const recentClient: Client[] = [
+const recentClient: any[] = [
 	{
 		name: 'Иван Петров',
 		company: 'ООО "Технологии"',

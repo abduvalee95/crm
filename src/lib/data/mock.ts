@@ -8,11 +8,11 @@ export const statCardsData: StatCardData[] = [
 ];
 
 export const salesChartData = [
-  { name: 'Пн', sales: 45000 },
+  { name: 'Пн', sales: 15000 },
   { name: 'Вт', sales: 52000 },
   { name: 'Ср', sales: 41000 },
   { name: 'Чт', sales: 62000 },
-  { name: 'Пт', sales: 78000 },
+  { name: 'Пт', sales: 68000 },
   { name: 'Сб', sales: 35000 },
-  { name: 'Вс', sales: 40000 },
+  { name: 'Вс', sales: 45000 },
 ];

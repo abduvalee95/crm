@@ -1,8 +1,8 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { salesChartData } from '@/lib/data/mock'
+import { salesChartData } from '@/lib/data/mock';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import EventPage from '../events/ui/page'
+import EventPage from '../events/ui/page';
 
 const DashboardPage = () => (
 	<div className="p-4 space-y-6 shadow-lg">
@@ -30,7 +30,7 @@ const DashboardPage = () => (
 					</ResponsiveContainer>
 				</CardContent>
 			</Card>
-		<EventPage/>
+			<EventPage />
 		</div>
 	</div>
 );

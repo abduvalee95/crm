@@ -19,7 +19,7 @@ const Menu = () => {
 	const pathname = usePathname();
 
 	return (
-		<aside className="flex flex-col justify-between h-screen w-70 bg-card p-4 ">
+		<aside className="fixed top-0 left-0 flex flex-col justify-between h-screen w-70 bg-card p-4 ">
 			{/* Title */}
 			<div>
 				<h1 className="text-white text-xl font-semibold mb-5 ml-2 pt-2">CRM Система</h1>

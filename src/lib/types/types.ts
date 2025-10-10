@@ -1,3 +1,5 @@
+import { ClientStatus } from '../enums/status'
+
 export type StatCardData = {
 	title: string;
 	value: string;
@@ -14,7 +16,7 @@ export type Client = {
   name: string;
   company: string;
   email: string;
-  status: 'active' | 'new' | 'inactive';
-  lastContact: string;
+  status: ClientStatus;
+  number: string;
   avatar: string;
 };
