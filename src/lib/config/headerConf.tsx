@@ -1,5 +1,7 @@
-import { Bell, Plus } from "lucide-react";
+import { Bell, LayoutGrid, List, Plus } from "lucide-react";
 import { PageConfig } from "../interface/header";
+import { ViewMode } from "../enums/deal";
+
 
 // Конфигурации для разных страниц
 const pageConfigs: Record<string, PageConfig> = {
@@ -8,6 +10,7 @@ const pageConfigs: Record<string, PageConfig> = {
 		subtitle: "Вот что происходит в вашей CRM сегодня",
 		actions: [
 			{
+				type:'button',
 				label: "Уведомления",
 				icon: <Bell />,
 				onClick: () => console.log("Notifications clicked"),
@@ -20,6 +23,7 @@ const pageConfigs: Record<string, PageConfig> = {
 		subtitle: "Управление базой клиентов",
 		actions: [
 			{
+				type:'button',
 				label: "Добавить клиента",
 				icon: <Plus />,
 				onClick: () => console.log("Add client clicked"),
@@ -27,23 +31,32 @@ const pageConfigs: Record<string, PageConfig> = {
 			}
 		]
 	},
-	deals: {
-		title: "Сделки",
-		subtitle: "Управление сделками",
-		actions: [
-			{
-				label: "Добавить сделку",
-				icon: <Plus />,
-				onClick: () => console.log("Add deal clicked"),
-				className: "bg-white text-black flex items-center gap-2 border p-2 rounded-lg border-gray-700"
-			}
-		]
-	},
+	deals: { // <<-- "deals" sahifasi uchun maxsus konfiguratsiya
+        title: "Сделки",
+        subtitle: "Управление воронкой продаж",
+        actions: [
+            {
+                type: 'view-switcher', // <<-- Yangi tur
+                options: [
+                    { view: ViewMode.Kanban, label: "Канбан", icon: <LayoutGrid size={16} /> },
+                    { view: ViewMode.Table, label: "Таблица", icon: <List size={16} /> }
+                ]
+            },
+            {
+                type: 'button', // <<-- Oddiy tugma ham yonida turishi mumkin
+                label: "Добавить сделку",
+                icon: <Plus />,
+                onClick: () => alert("Yangi kelishuv qo'shish formasi ochildi!"),
+                className: "bg-white text-black flex items-center gap-2 border p-2 rounded-lg border-gray-700"
+            }
+        ]
+    },
 	analytics: {
 		title: "Аналитика",
 		subtitle: "Отчеты и статистика",
 		actions: [
 			{
+				type:'button',
 				label: "Экспорт данных",
 				icon: <Bell />,
 				onClick: () => console.log("Export data clicked"),
@@ -56,6 +69,7 @@ const pageConfigs: Record<string, PageConfig> = {
 		subtitle: "Управление персоналом",
 		actions: [
 			{
+				type:'button',
 				label: "Добавить сотрудника",
 				icon: <Plus />,
 				onClick: () => console.log("Add employee clicked"),
