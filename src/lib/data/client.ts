@@ -1,4 +1,5 @@
 
+import { DealStage } from '../enums/deal';
 import { ClientStatus } from '../enums/status'
 import { Client, Event } from '../types/types';
 export const recentClients: Client[] = [
@@ -9,6 +10,7 @@ export const recentClients: Client[] = [
 		status: ClientStatus.active,
 		number: '+7848350987',
 		avatar: '/avatars/01.png',
+		stage: DealStage.Closed,
 	},
 	{
 		name: 'Мария Сидорова',
@@ -17,6 +19,7 @@ export const recentClients: Client[] = [
 		status:  ClientStatus.active,
 		number: '+704135445',
 		avatar: '/avatars/02.png',
+		stage: DealStage.New,
 	},
 	{
 		name: 'Алексей Козлов',
@@ -25,6 +28,7 @@ export const recentClients: Client[] = [
 		status:  ClientStatus.inactive,
 		number: '+71452455445',
 		avatar: '/avatars/03.png',
+		stage: DealStage.New,
 	},
 	{
 		name: 'Елена Новикова',
@@ -33,6 +37,7 @@ export const recentClients: Client[] = [
 		status:  ClientStatus.new,
 		number: '+7345235445',
 		avatar: '/avatars/04.png',
+		stage: DealStage.InProgress,
 	},
 ];
 

@@ -1,36 +1,10 @@
-"use client"
+'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getStatusBadge } from '@/features/client/labels';
 import { recentClients } from '@/lib/data/client';
-import { ClientStatus } from '@/lib/enums/status';
 import { Client } from '@/lib/types/types';
 import { useMemo } from 'react';
-
-const getStatusBadge = (status: Client['status']) => {
-	switch (status) {
-		case ClientStatus.active:
-			return (
-				<Badge variant="default" className="bg-green-600/20 text-green-400 border-none p-2">
-					Активен
-				</Badge>
-			);
-		case ClientStatus.new:
-			return (
-				<Badge variant="default" className="bg-blue-600/20 text-blue-400 border-none p-2">
-					Новый
-				</Badge>
-			);
-		case ClientStatus.inactive:
-			return (
-				<Badge variant="secondary" className="bg-gray-600/20 text-gray-400 border-none p-2">
-					В работе
-				</Badge>
-			);
-		default:
-			return <Badge variant="outline">Неизвестно</Badge>;
-	}
-};
 
 interface ClientsHomePageProps {
 	searchTerm?: string;
@@ -38,26 +12,27 @@ interface ClientsHomePageProps {
 	// sortBy?: 'name' | 'company' | 'status';
 }
 
-const ClientsHomePage = ({ 
-	searchTerm = '', 
-	statusFilter = 'all', 
-	// sortBy = 'name' 
-}: ClientsHomePageProps) => {
+const ClientsHomePage = ({
+	searchTerm = '',
+	statusFilter = 'all',
+}: // sortBy = 'name'
+ClientsHomePageProps) => {
 	const filteredAndSortedClients = useMemo(() => {
 		let filtered = recentClients;
 
 		// Filter by search term
 		if (searchTerm) {
-			filtered = filtered.filter(client => 
-				client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				client.number.includes(searchTerm)
+			filtered = filtered.filter(
+				(client) =>
+					client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.number.includes(searchTerm),
 			);
 		}
 
 		// Filter by status
 		if (statusFilter !== 'all') {
-			filtered = filtered.filter(client => client.status === statusFilter);
+			filtered = filtered.filter((client) => client.status === statusFilter);
 		}
 
 		// Sort clients
@@ -75,24 +50,21 @@ const ClientsHomePage = ({
 		// });
 
 		return filtered;
-	}, [searchTerm, statusFilter]);//sortBy
+	}, [searchTerm, statusFilter]); //sortBy
 
 	return (
 		<div>
 			<Card className="bg-black border border-gray-800 text-white shadow-lg">
 				<CardHeader className="flex flex-row items-center justify-between">
 					<CardTitle>
-						Клиенты 
-						{filteredAndSortedClients.length !== recentClients.length && 
-							` (${filteredAndSortedClients.length} из ${recentClients.length})`
-						}
+						Клиенты
+						{filteredAndSortedClients.length !== recentClients.length &&
+							` (${filteredAndSortedClients.length} из ${recentClients.length})`}
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{filteredAndSortedClients.length === 0 ? (
-						<div className="text-center py-8 text-gray-400">
-							Клиенты не найдены
-						</div>
+						<div className="text-center py-8 text-gray-400">Клиенты не найдены</div>
 					) : (
 						filteredAndSortedClients.map((client) => (
 							<div

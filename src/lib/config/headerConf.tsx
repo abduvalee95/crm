@@ -31,19 +31,19 @@ const pageConfigs: Record<string, PageConfig> = {
 			}
 		]
 	},
-	deals: { // <<-- "deals" sahifasi uchun maxsus konfiguratsiya
+	deals: { 
         title: "Сделки",
         subtitle: "Управление воронкой продаж",
         actions: [
             {
-                type: 'view-switcher', // <<-- Yangi tur
+                type: 'view-switcher',
                 options: [
                     { view: ViewMode.Kanban, label: "Канбан", icon: <LayoutGrid size={16} /> },
                     { view: ViewMode.Table, label: "Таблица", icon: <List size={16} /> }
                 ]
             },
             {
-                type: 'button', // <<-- Oddiy tugma ham yonida turishi mumkin
+                type: 'button',
                 label: "Добавить сделку",
                 icon: <Plus />,
                 onClick: () => alert("Yangi kelishuv qo'shish formasi ochildi!"),

@@ -1,3 +1,4 @@
+import { DealStage } from '../enums/deal';
 import { ClientStatus } from '../enums/status'
 
 export type StatCardData = {
@@ -19,4 +20,5 @@ export type Client = {
   status: ClientStatus;
   number: string;
   avatar: string;
+  stage: DealStage
 };

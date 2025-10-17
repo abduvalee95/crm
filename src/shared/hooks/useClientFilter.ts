@@ -1,55 +1,49 @@
-import { useState, useMemo } from 'react';
-import { Client } from '@/lib/types/types';
 import { recentClients } from '@/lib/data/client';
+import { Client } from '@/lib/types/types';
+import { useMemo, useState } from 'react';
 
 export const useClientFilter = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<Client['status'] | 'all'>('all');
-  // const [sortBy, setSortBy] = useState<'name' | 'company' | 'status'>('name');
+	const [searchTerm, setSearchTerm] = useState('');
+	const [statusFilter, setStatusFilter] = useState<Client['status'] | 'all'>('all');
+	const [stageFilter, setStageFilter] = useState<Client['stage'] | 'all'>('all');
+	// const [sortBy, setSortBy] = useState<'name' | 'company' | 'status'>('name');
 
-  const filteredClients = useMemo(() => {
-    let filtered = recentClients;
+	const filteredClients = useMemo(() => {
+		let filtered = recentClients;
 
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(client => 
-        client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        client.number.includes(searchTerm)
-      );
-    }
+		if (searchTerm) {
+			filtered = filtered.filter(
+				(client) =>
+					client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.number.includes(searchTerm),
+			);
+		}
 
-    // // Filter by status
-    // if (statusFilter !== 'all') {
-    //   filtered = filtered.filter(client => client.status === statusFilter);
-    // }
+		// Filter by deal stage if selected
+		if (stageFilter !== 'all') {
+			filtered = filtered.filter((client) => client.stage === stageFilter);
+		}
 
-    // // Sort clients
-    // filtered.sort((a, b) => {
-    //   switch (sortBy) {
-    //     case 'name':
-    //       return a.name.localeCompare(b.name);
-    //     case 'company':
-    //       return a.company.localeCompare(b.company);
-    //     case 'status':
-    //       return a.status.localeCompare(b.status);
-    //     default:
-    //       return 0;
-    //   }
-    // });
+		// // Filter by status (kept for future use)
+		// if (statusFilter !== 'all') {
+		//   filtered = filtered.filter(client => client.status === statusFilter);
+		// }
 
-    return filtered;
-  }, [searchTerm, statusFilter]);//sortBy
+		return filtered;
+	}, [searchTerm, statusFilter, stageFilter]);
 
-  return {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    // sortBy,
-    // setSortBy,
-    filteredClients,
-    totalClients: recentClients.length,
-    filteredCount: filteredClients.length
-  };
+	return {
+		searchTerm,
+		setSearchTerm,
+		statusFilter,
+		setStatusFilter,
+		stageFilter,
+		setStageFilter,
+		// sortBy,
+		// setSortBy,
+		filteredClients,
+		totalClients: recentClients.length,
+		filteredCount: filteredClients.length,
+	};
 };
