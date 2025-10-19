@@ -69,8 +69,7 @@ const DealKanbanView: React.FC<DealViewProps> = ({ deals }) => {
 									{typeof deal.progress === 'number' && (
 										<div className="mt-3">
 											<div className="flex items-center justify-between text-sm">
-												<span className="text-gray-400">Прогресс</span>
-												<span className="text-gray-200">{deal.progress}%</span>
+												<span className="text-gray-200">{deal.progress ?? 0} %</span>
 											</div>
 											<Progress value={deal.progress} className="mt-2 h-2" />
 										</div>

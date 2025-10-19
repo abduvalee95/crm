@@ -5,6 +5,7 @@ export interface DealViewProps {
 	deals: MinimalDeal[];
 }
 export interface Deal {
+	id: number;
 	name: string;
 	title?: string;
 	company: string;
@@ -13,4 +14,6 @@ export interface Deal {
 	stage: DealStage;
 	progress?: number;
 	deadline?: string;
+	createdAt?: string;
+	updatedAt?: string;
 }

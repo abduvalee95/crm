@@ -15,6 +15,7 @@ export type Event = {
   description: string;
 };
 export type Client = {
+  id: number;
   name: string;
   company: string;
   email: string;
@@ -22,9 +23,16 @@ export type Client = {
   number: string;
   avatar: string;
   stage: DealStage
+  responsible?: string;
+  deadline?: string;
+  amount?: number;
+  progress?: number;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type MinimalDeal = (Deal | Client) & {
+	id: number;
 	name: string;
 	company: string;
 	stage: DealStage;
@@ -32,4 +40,6 @@ export type MinimalDeal = (Deal | Client) & {
 	responsible?: string;
 	deadline?: string;
 	amount?: number;
+	createdAt?: string;
+	updatedAt?: string;
 };

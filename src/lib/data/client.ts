@@ -4,6 +4,7 @@ import { ClientStatus } from '../enums/status'
 import { Client, Event } from '../types/types';
 export const recentClients: Client[] = [
 	{
+		id: 1,
 		name: 'Иван Петров',
 		company: 'ООО "Технологии"',
 		email: 'ivan.p@tech.com',
@@ -11,8 +12,13 @@ export const recentClients: Client[] = [
 		number: '+7848350987',
 		avatar: '/avatars/01.png',
 		stage: DealStage.Closed,
+		responsible: 'Иван Петров',
+		deadline: '2025-01-01',
+		amount: 100000,
+		progress: 50,
 	},
 	{
+		id: 2,
 		name: 'Мария Сидорова',
 		company: 'Строй-Инвест',
 		email: 'm.sidorova@stroy.ru',
@@ -20,8 +26,13 @@ export const recentClients: Client[] = [
 		number: '+704135445',
 		avatar: '/avatars/02.png',
 		stage: DealStage.New,
+		responsible: 'Мария Сидорова',
+		deadline: '2025-01-01',
+		amount: 100000,
+		progress: 50,
 	},
 	{
+		id: 3,
 		name: 'Алексей Козлов',
 		company: 'Дизайн-Бюро',
 		email: 'alex@design.io',
@@ -29,8 +40,13 @@ export const recentClients: Client[] = [
 		number: '+71452455445',
 		avatar: '/avatars/03.png',
 		stage: DealStage.New,
+		responsible: 'Алексей Козлов',
+		deadline: '2025-01-01',
+		amount: 100000,
+		progress: 50,
 	},
 	{
+		id: 4,
 		name: 'Елена Новикова',
 		company: 'МаркетПлюс',
 		email: 'elena.n@market.com',
@@ -38,6 +54,10 @@ export const recentClients: Client[] = [
 		number: '+7345235445',
 		avatar: '/avatars/04.png',
 		stage: DealStage.InProgress,
+		responsible: 'Елена Новикова',
+		deadline: '2025-01-01',
+		amount: 100000,
+		progress: 50,
 	},
 ];
 
