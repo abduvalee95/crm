@@ -1,5 +1,6 @@
 import { DealStage } from '../enums/deal';
 import { ClientStatus } from '../enums/status'
+import { Deal } from '../interface/deal'
 
 export type StatCardData = {
 	title: string;
@@ -21,4 +22,14 @@ export type Client = {
   number: string;
   avatar: string;
   stage: DealStage
+};
+
+export type MinimalDeal = (Deal | Client) & {
+	name: string;
+	company: string;
+	stage: DealStage;
+	progress?: number;
+	responsible?: string;
+	deadline?: string;
+	amount?: number;
 };

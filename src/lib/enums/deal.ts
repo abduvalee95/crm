@@ -1,7 +1,7 @@
 export enum DealStage {
-    New = 'new',
-    InProgress = 'in_progress',
-    Closed = 'closed',
+    New = 'Новый',
+    InProgress = 'В работе',
+    Closed = 'Закрыт',
   }
   
 export enum ViewMode {
