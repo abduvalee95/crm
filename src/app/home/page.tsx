@@ -1,4 +1,3 @@
-"use client"
 import ClientsHomePage from '@/widgets/client/ui/page'
 import DashboardPage from '@/widgets/dashboard/ui/page'
 import SellsDashboard from '@/widgets/dashboard/ui/page'

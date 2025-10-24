@@ -1,10 +1,10 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { DealStage } from '@/lib/enums/deal';
 import { Deal, DealViewProps } from '@/lib/interface/deal';
 import { MinimalDeal } from '@/lib/types/types';
+import Image from 'next/image';
 import { useMemo } from 'react';
 
 const stageLabels = (stage: Deal['stage']) => {
@@ -50,7 +50,7 @@ const DealKanbanView: React.FC<DealViewProps> = ({ deals }) => {
 			{(Object.keys(columns) as DealStage[]).map((stage) => (
 				<div key={stage} className="bg-black rounded-xl border border-gray-700 p-4 flex flex-col gap-4">
 					<div className="flex justify-between items-center mb-4">
-						<h2 className="text-white text-lg font-semibold ">{(stage)}</h2>
+						<h2 className="text-white text-lg font-semibold ">{stage}</h2>
 						<Badge className="bg-black border-gray-700 text-gray-300">{columns[stage].length}</Badge>
 					</div>
 					<div className="space-y-4 flex flex-col">
@@ -59,12 +59,10 @@ const DealKanbanView: React.FC<DealViewProps> = ({ deals }) => {
 								<CardContent className="p-4">
 									<div className="flex items-start justify-between">
 										<div>
-											<h3 className="font-semibold">{deal.name}</h3>
-											<p className="text-sm text-gray-400">{deal.company}</p>
+											<h3 className="font-semibold">{deal.company}</h3>
+											<p className="text-sm text-gray-400">{deal.name}</p>
 										</div>
-										<span  className="border-gray-700 text-gray-300">
-											{stageLabels(deal.stage)}
-										</span>
+										<span className="border-gray-700 text-gray-300">{stageLabels(deal.stage)}</span>
 									</div>
 									{typeof deal.progress === 'number' && (
 										<div className="mt-3">
@@ -77,9 +75,7 @@ const DealKanbanView: React.FC<DealViewProps> = ({ deals }) => {
 
 									<div className="mt-3 flex items-center justify-between text-sm text-gray-400">
 										<div className="flex items-center gap-2">
-											<Avatar className="h-6 w-6">
-												<AvatarFallback>{deal.name?.slice(0, 1).toUpperCase()}</AvatarFallback>
-											</Avatar>
+											<Image src="/clients.png" alt="client" width={15} height={15} className="invert" />
 											<span>{deal.responsible}</span>
 										</div>
 										{deal.deadline && <span>Срок: {deal.deadline}</span>}

@@ -15,7 +15,7 @@ export const recentClients: Client[] = [
 		responsible: 'Иван Петров',
 		deadline: '2025-01-01',
 		amount: 100000,
-		progress: 50,
+		progress: 30,
 	},
 	{
 		id: 2,
@@ -43,7 +43,7 @@ export const recentClients: Client[] = [
 		responsible: 'Алексей Козлов',
 		deadline: '2025-01-01',
 		amount: 100000,
-		progress: 50,
+		progress: 70,
 	},
 	{
 		id: 4,
@@ -57,7 +57,7 @@ export const recentClients: Client[] = [
 		responsible: 'Елена Новикова',
 		deadline: '2025-01-01',
 		amount: 100000,
-		progress: 50,
+		progress: 90,
 	},
 ];
 

@@ -1,4 +1,3 @@
-"use client"
 import Header from '@/widgets/header/ui/Header'
 import React from 'react'
 

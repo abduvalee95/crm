@@ -1,4 +1,4 @@
-import { Bell, LayoutGrid, List, Plus } from "lucide-react";
+import { ArrowDownToLine, Bell, LayoutGrid, List, Plus } from "lucide-react";
 import { PageConfig } from "../interface/header";
 import { ViewMode } from "../enums/deal";
 
@@ -12,7 +12,7 @@ const pageConfigs: Record<string, PageConfig> = {
 			{
 				type:'button',
 				label: "Уведомления",
-				icon: <Bell />,
+				icon: <Bell />, 
 				onClick: () => console.log("Notifications clicked"),
 				className: "flex items-center gap-2 border p-2 rounded-lg bg-card border-gray-700"
 			}
@@ -58,6 +58,13 @@ const pageConfigs: Record<string, PageConfig> = {
 			{
 				type:'button',
 				label: "Экспорт данных",
+				icon: <ArrowDownToLine />,
+				onClick: () => console.log("Export data clicked"),
+				className: "flex items-center gap-2 border p-2 rounded-lg bg-card border-gray-700"
+			},
+			{
+				type:'button',
+				label: "За год",
 				icon: <Bell />,
 				onClick: () => console.log("Export data clicked"),
 				className: "flex items-center gap-2 border p-2 rounded-lg bg-card border-gray-700"

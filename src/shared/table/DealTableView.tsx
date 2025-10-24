@@ -1,6 +1,5 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TableCell } from '@/components/ui/table';
 import { DealStage } from '@/lib/enums/deal';
 import { Deal, DealViewProps } from '@/lib/interface/deal';
 import React from 'react';
@@ -55,11 +54,14 @@ const DealTableView: React.FC<DealViewProps> = ({ deals }) => {
 								</div>
 								<span className="text-gray-400 text-sm">{deal.name}</span>
 							</div>
-							<span className="text-gray-400 text-sm">{deal.progress ?? 0}%</span>
+							<div className="flex items-center gap-2">
+								<span className="text-gray-400 text-sm">{deal.progress ?? 0}%</span>
+								<span className="text-gray-400 text-sm">{deal.name}</span>
+								<span className="text-gray-400 text-sm">$ {deal.amount ?? 0}</span>
+								<span className="text-gray-400 text-sm">{deal.deadline ?? ''}</span>
+							</div>
 						</div>
-						<TableCell className="text-right">
-							<div>{stageLabel(deal.stage)}</div>
-						</TableCell>
+						<span>{stageLabel(deal.stage)}</span>
 					</div>
 				))}
 			</CardContent>
