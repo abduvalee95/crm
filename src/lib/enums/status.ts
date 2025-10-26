@@ -17,3 +17,10 @@ export enum OnlineStatus {
   AWAY = 'away',
   BUSY = 'busy'
 }
+
+export enum Role{
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  ANALYST = 'analyst',
+  SUPPORT = 'support'
+}
