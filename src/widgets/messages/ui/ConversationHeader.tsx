@@ -23,7 +23,7 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({ conversa
 					<div>
 						<h3 className="text-white font-medium text-lg">{conversation.title}</h3>
 						<p className="text-green-400 text-sm flex items-center gap-1">
-							<div className="w-2 h-2 bg-green-400 rounded-full" />В сети
+							<span className="w-2 h-2 bg-green-400 rounded-full" />В сети
 						</p>
 					</div>
 				</div>

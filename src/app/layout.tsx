@@ -1,6 +1,7 @@
-import Menu from '@/widgets/sidebar/ui/Menu';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Menu from '../widgets/sidebar/ui/Menu';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -16,18 +17,17 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body suppressHydrationWarning={false} className={inter.className}>
-				<div className="w-full h-screen flex text-white bg-black">
-					<div className="flex flex-col w-70 shadow-lg border-l border-gray-800">
-						<Menu />
+		<html lang="en" suppressHydrationWarning>
+			<body className={inter.className}>
+				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+					<div className="w-full h-screen flex text-white bg-black dark:bg-black">
+						<div className="flex flex-col w-70 shadow-lg border-l border-gray-800">
+							<Menu />
+						</div>
+						<div className="flex-1">{children}</div>
 					</div>
-					<div className="flex-1">{children}</div>
-				</div>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
-}
-function Poppins(arg0: { subsets: string[] }) {
-	throw new Error('Function not implemented.');
 }

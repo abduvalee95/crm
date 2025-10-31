@@ -20,7 +20,7 @@ export interface ButtonAction {
     type: 'button';
     label: string;
     icon?: React.ReactNode;
-    onClick: () => void;
+    onClick: () => void; 
     className?: string;
 }
 

@@ -28,6 +28,7 @@ const EmployeesSearch = () => {
 
 		return matchesSearch && matchesDepartment && matchesStatus && matchesPerformance && matchesRole;
 	});
+//todo: shunu analytyc pageda ishlatishim kerek  cvs download
 
 	const exportData = () => {
 		const csvContent = [

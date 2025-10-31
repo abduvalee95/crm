@@ -2,14 +2,32 @@
 
 import { Button } from '@/components/ui/button';
 import pageConfigs from '@/lib/config/headerConf';
-import { HeaderProps } from '@/lib/interface/header';
 import { ViewMode } from '@/lib/enums/deal';
+import { HeaderProps } from '@/lib/interface/header';
+import FormModal from '@/widgets/ModalForm/FormModal';
 
-const Header: React.FC<HeaderProps> = ({ pageType = 'deals', customConfig, activeView = ViewMode.Kanban, onViewChange }) => {
-
-    
+const Header: React.FC<HeaderProps> = ({
+	pageType = 'deals',
+	customConfig,
+	activeView = ViewMode.Kanban,
+	onViewChange,
+}) => {
 	// Используем кастомную конфигурацию или конфигурацию по типу страницы
 	const config = customConfig || pageConfigs[pageType];
+
+	const tableForPage = (pt: HeaderProps['pageType']): 'client' | 'deal' | 'task' | 'employees' | null => {
+		switch (pt) {
+			case 'clients':
+				return 'client';
+			case 'deals':
+				return 'deal';
+			case 'employees':
+				return 'employees';
+			// если появится страница задач
+			default:
+				return null;
+		}
+	};
 
 	return (
 		<header className="mt-5 flex justify-between px-6">
@@ -20,13 +38,19 @@ const Header: React.FC<HeaderProps> = ({ pageType = 'deals', customConfig, activ
 			<div className="flex items-center space-x-4 px-8">
 				{config.actions?.map((action, index) => {
 					switch (action.type) {
-						case 'button':
+						case 'button': {
+							const table = tableForPage(pageType);
+							const isAddAction = typeof action.label === 'string' && action.label.toLowerCase().includes('добавить');
+							if (isAddAction && table) {
+								return <FormModal key={index} table={table} type="create" />;
+							}
 							return (
 								<Button key={index} onClick={action.onClick} className={action.className}>
 									{action.icon}
 									{action.label}
 								</Button>
 							);
+						}
 
 						case 'view-switcher':
 							return (

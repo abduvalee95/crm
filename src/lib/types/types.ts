@@ -43,3 +43,4 @@ export type MinimalDeal = (Deal | Client) & {
 	createdAt?: string;
 	updatedAt?: string;
 };
+

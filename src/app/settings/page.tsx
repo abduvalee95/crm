@@ -1,10 +1,5 @@
-import Header from '@/widgets/header/ui/Header'
-import React from 'react'
+import { redirect } from 'next/navigation';
 
-export default function SettingsPage() {
-	return (
-	<div className="flex-1 min-h-screen p-4 space-y-6 shadow-lg">
-			<Header pageType="settings"/>
-			</div>
-	)
+export default function SettingsIndexPage() {
+	redirect('/settings/profile');
 }

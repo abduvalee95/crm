@@ -27,26 +27,12 @@ const EmployeesStat = () => {
 			bgColor: 'bg-black',
 		},
 		{
-			title: 'Админы',
-			value: employeeStats.departments.IT,
-			icon: Activity,
-			color: 'text-purple-400',
-			bgColor: 'bg-black',
-		},
-		{
 			title: 'Менеджеры',
 			value: employeeStats.departments.Продажи,
 			icon: Activity,
 			color: 'text-blue-400',
 			bgColor: 'bg-black',
-		},
-		{
-			title: 'Аналитики',
-			value: employeeStats.departments.Аналитика,
-			icon: Activity,
-			color: 'text-yellow-400',
-			bgColor: 'bg-black',
-		},
+		}
 	];
 
 	return (

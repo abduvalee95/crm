@@ -1,5 +1,6 @@
 'use client';
 
+import { useThemeSettings } from '@/providers/ThemeProvider'
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,7 +18,25 @@ const items = [
 
 const Menu = () => {
 	const pathname = usePathname();
+	const { fontSize, density } = useThemeSettings();
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case 'small': return 'text-sm';
+      case 'medium': return 'text-base';
+      case 'large': return 'text-lg';
+      default: return 'text-base';
+    }
+  };
+
+  const getSpacingClass = () => {
+    switch (density) {
+      case 'compact': return 'gap-1';
+      case 'comfortable': return 'gap-2';
+      case 'spacious': return 'gap-3';
+      default: return 'gap-2';
+    }
+  };
 	return (
 		<aside className="fixed top-0 left-0 flex flex-col justify-between h-screen w-70 bg-card p-4 ">
 			{/* Title */}
