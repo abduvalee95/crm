@@ -8,7 +8,7 @@ const StatCard = ({ title, value, change, icon }: StatCardData) => {
 		<Card className="bg-black border-gray-800 text-white shadow-lg">
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 				<CardTitle className="text-sm font-medium text-white">{title}</CardTitle>
-				<Image src={icon} alt="value" width={22} height={22} className="invert" />
+				<Image src={icon} alt={`Иконка метрики: ${title}`} width={22} height={22} className="invert" />
 			</CardHeader>
 			<CardContent>
 				<div className="text-3xl">{value}</div>

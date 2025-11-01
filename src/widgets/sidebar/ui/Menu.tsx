@@ -1,6 +1,9 @@
 'use client';
 
-import { useThemeSettings } from '@/providers/ThemeProvider'
+import { useThemeSettings } from '@/providers/ThemeProvider';
+import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
+import { toggleSidebar } from '@/shared/store/uiSlice';
+import { Menu as MenuIcon, PanelLeftClose, PanelRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,58 +22,96 @@ const items = [
 const Menu = () => {
 	const pathname = usePathname();
 	const { fontSize, density } = useThemeSettings();
+	const dispatch = useAppDispatch();
+	const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
 
-  const getFontSizeClass = () => {
-    switch (fontSize) {
-      case 'small': return 'text-sm';
-      case 'medium': return 'text-base';
-      case 'large': return 'text-lg';
-      default: return 'text-base';
-    }
-  };
+	const getFontSizeClass = () => {
+		switch (fontSize) {
+			case 'small':
+				return 'text-sm';
+			case 'medium':
+				return 'text-base';
+			case 'large':
+				return 'text-lg';
+			default:
+				return 'text-base';
+		}
+	};
 
-  const getSpacingClass = () => {
-    switch (density) {
-      case 'compact': return 'gap-1';
-      case 'comfortable': return 'gap-2';
-      case 'spacious': return 'gap-3';
-      default: return 'gap-2';
-    }
-  };
+	const getSpacingClass = () => {
+		switch (density) {
+			case 'compact':
+				return 'gap-1';
+			case 'comfortable':
+				return 'gap-2';
+			case 'spacious':
+				return 'gap-3';
+			default:
+				return 'gap-2';
+		}
+	};
+
+	const fontSizeClass = getFontSizeClass();
+	const spacingClass = getSpacingClass();
+	const linkBaseClasses = sidebarOpen ? 'justify-start gap-3 px-4' : 'justify-center px-3';
+
 	return (
-		<aside className="fixed top-0 left-0 flex flex-col justify-between h-screen w-70 bg-card p-4 ">
-			{/* Title */}
+		<aside
+			aria-label="Боковая панель"
+			className="flex h-full flex-col justify-between bg-card p-4 text-white transition-colors"
+			data-collapsed={!sidebarOpen}
+		>
 			<div>
-				<h1 className="text-white text-xl font-semibold mb-5 ml-2 pt-2">CRM Система</h1>
-				<div className="border-t border-gray-700 p-2" />
-				<nav className="flex flex-col gap-1">
+				<div className="flex items-center justify-between pb-4">
+					<div className="flex items-center gap-2">
+						{/* <MenuIcon aria-hidden className="h-5 w-5" /> */}
+						{sidebarOpen && <span className="text-xl font-semibold">CRM Система</span>}
+					</div>
+					<button
+						type="button"
+						className="rounded-lg border border-gray-700 p-2 text-gray-300 transition hover:border-gray-500 hover:text-white"
+						onClick={() => dispatch(toggleSidebar())}
+						aria-label={sidebarOpen ? 'Свернуть боковую панель' : 'Развернуть боковую панель'}
+						aria-pressed={sidebarOpen}
+					>
+						{sidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelRight className="h-4 w-4" />}
+					</button>
+				</div>
+				<div className="border-t border-gray-700" aria-hidden="true" />
+				<nav aria-label="Основные разделы" className={`mt-4 flex flex-col ${spacingClass}`}>
 					{items.map((item) => {
 						const isActive = pathname === item.href;
 						return (
 							<Link
 								href={item.href}
 								key={item.href}
-								className={` flex items-center gap-3 px-4 py-2 rounded-lg text-white transition ${
+								className={`flex w-full items-center ${linkBaseClasses} py-2 rounded-lg text-white transition ${
 									isActive ? 'bg-blue-600' : 'hover:bg-[#222]'
 								}`}
+								aria-current={isActive ? 'page' : undefined}
 							>
 								<Image src={item.icon} alt={item.label} width={22} height={22} className="invert" />
-								<span className="text-[16px]">{item.label}</span>
+								{sidebarOpen && <span className={`${fontSizeClass} leading-tight`}>{item.label}</span>}
 							</Link>
 						);
 					})}
 				</nav>
 			</div>
 
-			{/* Profile Section */}
-			<div className="border-t border-gray-700 pt-3 flex items-center gap-3">
-				<div className="flex items-center justify-center bg-blue-600 rounded-full w-8 h-8 text-white text-sm font-bold">
+			<div
+				className={`flex items-center border-t border-gray-700 pt-3 transition-[gap] ${
+					sidebarOpen ? 'gap-3' : 'justify-center'
+				}`}
+			>
+				<div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
 					Ю
 				</div>
-				<div>
-					<p className="text-white text-sm font-medium">Юсуф</p>
-					<p className="text-gray-400 text-xs">Администратор</p>
-				</div>
+				{sidebarOpen && (
+					<div>
+						<p className="text-sm font-medium text-white">Юсуф</p>
+						<p className="text-xs text-gray-400">Администратор</p>
+					</div>
+				)}
 			</div>
 		</aside>
 	);

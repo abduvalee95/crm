@@ -30,6 +30,7 @@ export function ThemeProvider({ children, ...props }: any) {
 		const savedDensity = localStorage.getItem('density') as 'compact' | 'comfortable' | 'spacious';
 
 		if (savedFontSize) setFontSize(savedFontSize);
+		if (savedDensity) setDensity(savedDensity);
 	}, []);
 
 	useEffect(() => {

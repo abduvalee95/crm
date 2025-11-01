@@ -1,6 +1,10 @@
 import { ArrowDownToLine, Bell, LayoutGrid, List, Plus } from "lucide-react";
 import { PageConfig } from "../interface/header";
 import { ViewMode } from "../enums/deal";
+import cvsDownloader, { downloadCSV } from '../cvsDownloader'
+import { Employee, employeesData } from '../data/emloyers'
+import { analyticsData } from '../data/mock'
+
 
 
 // Конфигурации для разных страниц
@@ -58,8 +62,8 @@ const pageConfigs: Record<string, PageConfig> = {
 			{
 				type:'button',
 				label: "Экспорт данных",
-				icon: <ArrowDownToLine />,
-				onClick: () => console.log("Export data clicked"),
+				icon: <ArrowDownToLine />,		
+				onClick: () => downloadCSV(analyticsData.clientPerformance),
 				className: "flex items-center gap-2 border p-2 rounded-lg bg-card border-gray-700"
 			},
 			{

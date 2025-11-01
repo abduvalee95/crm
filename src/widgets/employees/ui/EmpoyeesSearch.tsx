@@ -28,7 +28,7 @@ const EmployeesSearch = () => {
 
 		return matchesSearch && matchesDepartment && matchesStatus && matchesPerformance && matchesRole;
 	});
-//todo: shunu analytyc pageda ishlatishim kerek  cvs download
+//todo: shunu analytyc pageda ishlatishim kerek  cvs
 
 	const exportData = () => {
 		const csvContent = [
