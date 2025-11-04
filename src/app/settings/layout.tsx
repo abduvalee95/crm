@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import Header from '@/widgets/header/ui/Header'
-import { Bell, Palette, User,Link2, LockKeyhole } from 'lucide-react'
+import Header from '@/widgets/header/ui/Header';
+import { Bell, Link2, LockKeyhole, Palette, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

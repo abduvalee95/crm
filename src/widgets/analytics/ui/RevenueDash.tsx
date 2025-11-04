@@ -1,17 +1,18 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { analyticsData } from '@/lib/data/mock';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const RevenueDash = () => (
-	<Card className="bg-black border-gray-700 text-white shadow-xl">
+type Point = { name: string; revenue: number; profit: number };
+
+const RevenueDash = ({ data }: { data: Point[] }) => (
+	<Card className="bg-background text-card-foreground border-border shadow-xl">
 		<CardHeader>
 			<CardTitle className="text-xl font-semibold">Доходы по месяцам</CardTitle>
 		</CardHeader>
-		<CardContent className="h-[330px] w-full">
+		<CardContent className="h-[330px]">
 			<ResponsiveContainer>
-				<LineChart data={analyticsData.revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-					<CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+				<LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }} className="focus:recharts-wrapper focus:recharts-surface outline-none echarts-wrapper *:focus:outline-none">
+				<CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
 					<XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} />
 					<YAxis stroke="#9CA3AF" fontSize={12} tickFormatter={(value) => `₽${value}к`} />
 					<Tooltip

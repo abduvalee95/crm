@@ -3,7 +3,7 @@
 import { useThemeSettings } from '@/providers/ThemeProvider';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import { toggleSidebar } from '@/shared/store/uiSlice';
-import { Menu as MenuIcon, PanelLeftClose, PanelRight } from 'lucide-react';
+import { PanelLeftClose, PanelRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -57,19 +57,20 @@ const Menu = () => {
 
 	return (
 		<aside
-			aria-label="Боковая панель"
-			className="flex h-full flex-col justify-between bg-card p-4 text-white transition-colors"
+			aria-label="Боковая панель навигации"
+			className={`flex h-full flex-col justify-between  p-4 text-card-foreground transition-colors ${
+				sidebarOpen ? 'w-64' : 'w-20'
+			}`}
 			data-collapsed={!sidebarOpen}
 		>
 			<div>
 				<div className="flex items-center justify-between pb-4">
 					<div className="flex items-center gap-2">
-						{/* <MenuIcon aria-hidden className="h-5 w-5" /> */}
 						{sidebarOpen && <span className="text-xl font-semibold">CRM Система</span>}
 					</div>
 					<button
 						type="button"
-						className="rounded-lg border border-gray-700 p-2 text-gray-300 transition hover:border-gray-500 hover:text-white"
+						className="rounded-lg border border-border p-2 text-muted-foreground transition hover:border-primary hover:text-primary"
 						onClick={() => dispatch(toggleSidebar())}
 						aria-label={sidebarOpen ? 'Свернуть боковую панель' : 'Развернуть боковую панель'}
 						aria-pressed={sidebarOpen}
@@ -86,7 +87,7 @@ const Menu = () => {
 								href={item.href}
 								key={item.href}
 								className={`flex w-full items-center ${linkBaseClasses} py-2 rounded-lg text-white transition ${
-									isActive ? 'bg-blue-600' : 'hover:bg-[#222]'
+									isActive ? 'bg-primary' : 'hover:bg-accent'
 								}`}
 								aria-current={isActive ? 'page' : undefined}
 							>

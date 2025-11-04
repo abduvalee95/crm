@@ -8,13 +8,13 @@ const DashboardPage = () => (
 	<div className="p-4 space-y-6 shadow-lg">
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			{/* График продажa */}
-			<Card className="lg:col-span-2  bg-black border-gray-600 text-white shadow-lg">
+			<Card className="lg:col-span-2  bg-background border-border text-card-foreground shadow-lg">
 				<CardHeader>
 					<CardTitle>Продажи за неделю</CardTitle>
 				</CardHeader>
 				<CardContent className="h-[300px] w-full">
 					<ResponsiveContainer>
-						<LineChart data={salesChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+						<LineChart data={salesChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }} className='focus:recharts-wrapper focus:recharts-surface outline-none echarts-wrapper *:focus:outline-none'>
 							<CartesianGrid strokeDasharray="3 3" stroke="#aebcd3ff" />
 							<XAxis dataKey="name" stroke="gray" fontSize={12} />
 							<YAxis stroke="gray" fontSize={12} tickFormatter={(value) => `${value}`} />

@@ -11,24 +11,20 @@ export default function ClientPage() {
 		setSearchTerm,
 		statusFilter,
 		setStatusFilter,
-		// sortBy,
-		// setSortBy
 	} = useClientFilter();
 
 	return (
-		<div className="w-full flex-1 bg-black min-h-screen p-4 space-y-6 shadow-lg">
+		<div className="w-full flex-1 bg-background min-h-screen p-4 space-y-6 shadow-lg">
 			<div>
 				<Header pageType="clients" />
 				<SearchBar
 					onSearchChange={setSearchTerm}
 					onStatusFilter={setStatusFilter}
-					// onSortChange={setSortBy}
 				/>
 			</div>
 			<ClientsHomePage
 				searchTerm={searchTerm}
 				statusFilter={statusFilter}
-				// sortBy={sortBy}
 			/>
 		</div>
 	);

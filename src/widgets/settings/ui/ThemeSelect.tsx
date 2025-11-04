@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { useThemeSettings } from '@/providers/ThemeProvider';
 import { Card } from '@/shared/ui/Card';
-import { Layout, Moon, Palette, Save, Sun, Type } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { Layout, Moon, Palette, Save, Sun, Type } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 export default function ThemeSection() {
 	const { theme, setTheme } = useTheme();
-	const {density, setDensity, fontSize, setFontSize} = useThemeSettings();
+	const { density, setDensity, fontSize, setFontSize } = useThemeSettings();
 	const [mounted, setMounted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 

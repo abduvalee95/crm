@@ -38,7 +38,7 @@ const statusLabel = (status: TaskStatus) => {
 
 const TaskTableView: React.FC<TaskViewProps> = ({ tasks }) => {
 	return (
-		<Card className="bg-black border-gray-800 text-white">
+		<Card className="bg-background border-border text-card-foreground">
 			<CardHeader className="flex flex-row items-center justify-between">
 				<CardTitle>
 					Список задач
@@ -49,23 +49,23 @@ const TaskTableView: React.FC<TaskViewProps> = ({ tasks }) => {
 				{tasks.map((task) => (
 					<div
 						key={task.id}
-						className="flex gap-4 justify-between border border-gray-800 rounded-lg items-center hover:bg-gray-800/50 transition-colors p-2 cursor-pointer "
+						className="flex gap-4 justify-between border border-border rounded-lg items-center hover:bg-accent transition-colors p-2 cursor-pointer "
 					>
 						<div className="flex justify-between item-center p-3 hover:bg-gray-900/50 transition-colors flex-col">
 							<div>
 								<div className="flex items-center justify-between">
 									<span className="font-medium">{task.title}</span>
 								</div>
-								{task.description && <span className="text-gray-400 text-sm">{task.description}</span>}
+								{task.description && <span className="text-muted-foreground text-sm">{task.description}</span>}
 							</div>
-							<div className="flex items-center gap-3 text-gray-400 text-sm mt-2">
+							<div className="flex items-center gap-3 text-muted-foreground text-sm mt-2">
 								<span>{task.assignee ?? '—'}</span>
 								<span className="uppercase">{task.priority ?? 'medium'}</span>
 								<span>{task.deadline ?? ''}</span>
 							</div>
 						</div>
 						<TableCell className="text-right">
-							<div>{statusLabel(task.status)}</div>
+							<span>{statusLabel(task.status)} </span>
 						</TableCell>
 					</div>
 				))}

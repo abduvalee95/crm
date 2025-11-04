@@ -44,7 +44,7 @@
 }
 
 :root {
-	--background: #ffffff;
+	--background: #fffafa;
 	--foreground: #0f172a;
 	--card: #ffffff;
 	--card-foreground: #0f172a;
@@ -54,11 +54,11 @@
 	--secondary-foreground: #0f172a;
 	--muted: #f8fafc;
 	--muted-foreground: #64748b;
-	--accent: #f1f5f9;
+	--accent: #a7a9ab;
 	--accent-foreground: #0f172a;
 	--border: #e2e8f0;
 	--input: #f8fafc;
-	--ring: #3b82f6;
+	--ring: #0f172a;
 
 	/* Font size variables */
 	--font-size-small: 0.75rem; /* 12px */
@@ -86,7 +86,7 @@
 
 .dark {
 	--background: #08090b;
-	--foreground: #f8fafc;
+	--foreground: #fffafa;
 	--card: #1e293b;
 	--card-foreground: #f8fafc;
 	--primary: #3b82f6;
@@ -99,7 +99,7 @@
 	--accent-foreground: #f8fafc;
 	--border: #334155;
 	--input: #1e293b;
-	--ring: #3b82f6;
+	--ring: #1e293b;
 	--chart-1: oklch(0.488 0.243 264.376);
 	--chart-2: oklch(0.696 0.17 162.48);
 	--chart-3: oklch(0.769 0.188 70.08);
@@ -116,7 +116,7 @@
 }
 
 :root {
-	--bla: #0f1115;
+	--background-black: #0f1115;
 	--card: #1b1e23;
 	--muted: #94a3b8;
 	--accent-blue: #3b82f6;
@@ -133,7 +133,7 @@
 }
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
+		@apply border-gray-700;
 	}
 	body {
 		@apply bg-background text-foreground;

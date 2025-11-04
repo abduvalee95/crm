@@ -1,6 +1,13 @@
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { DealStage } from '@/lib/enums/deal';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 
@@ -62,14 +69,22 @@ export default function DealForm({ type, data, onCancel, onSuccess }: FormProps)
 		setSubmitting(false);
 	};
 
+	const getStageLabel = (stage: DealStage) => {
+		switch (stage) {
+			case DealStage.New:
+				return 'Новый';
+			case DealStage.InProgress:
+				return 'В работе';
+			case DealStage.Closed:
+				return 'Закрыт';
+			default:
+				return stage;
+		}
+	};
+
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
-			<div>
-				<h2 className="text-lg font-semibold">{type === 'create' ? 'Добавить сделку' : 'Редактировать сделку'}</h2>
-				<p className="text-sm text-muted-foreground">Заполните данные сделки</p>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="flex flex-col gap-6">
 				<div>
 					<Input placeholder="Название" value={form.name} onChange={update('name')} aria-invalid={!!errors.name} />
 					{errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
@@ -88,16 +103,30 @@ export default function DealForm({ type, data, onCancel, onSuccess }: FormProps)
 					{errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
 				</div>
 				<div>
-					<select
-						value={form.stage}
-						onChange={update('stage')}
-						className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] md:text-sm"
-						aria-invalid={!!errors.stage}
-					>
-						<option value={DealStage.New}>Новый</option>
-						<option value={DealStage.InProgress}>В работе</option>
-						<option value={DealStage.Closed}>Закрыт</option>
-					</select>
+					<label className="text-sm font-medium mb-2 block">Стадия сделки</label>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								className="w-full justify-between bg-background border-border text-card-foreground hover:bg-accent"
+								type="button"
+							>
+								{getStageLabel(form.stage)}
+								<ChevronDown className="w-4 h-4 ml-2" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, stage: DealStage.New }))}>
+								Новый
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, stage: DealStage.InProgress }))}>
+								В работе
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, stage: DealStage.Closed }))}>
+								Закрыт
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 					{errors.stage && <p className="mt-1 text-xs text-red-500">{errors.stage}</p>}
 				</div>
 				<div>

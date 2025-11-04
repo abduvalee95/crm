@@ -19,35 +19,10 @@ export const getStatusBadge = (status: Client['status']) => {
 		case ClientStatus.inactive:
 			return (
 				<Badge variant="secondary" className="bg-gray-600/20 text-gray-400 border-none p-2">
-					В работе
+					Неактивен
 				</Badge>
 			);
 		default:
 			return <Badge variant="outline">Неизвестно</Badge>;
 	}
 };
-
-// export const getStageBadge = (stage: Deal['stage']) => {
-// 	switch (stage) {
-// 		case DealStage.New:
-// 			return (
-// 				<Badge variant="default" className="bg-green-600/20 text-green-400 border-none p-2">
-// 					Активен
-// 				</Badge>
-// 			);
-// 		case DealStage.InProgress:
-// 			return (
-// 				<Badge variant="default" className="bg-blue-600/20 text-blue-400 border-none p-2">
-// 					Новый
-// 				</Badge>
-// 			);
-// 		case DealStage.Closed:
-// 			return (
-// 				<Badge variant="secondary" className="bg-gray-600/20 text-gray-400 border-none p-2">
-// 					В работе
-// 				</Badge>
-// 			);
-// 		default:
-// 			return <Badge variant="outline">Неизвестно</Badge>;
-// 	}
-// };

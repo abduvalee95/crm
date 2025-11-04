@@ -6,7 +6,7 @@ const EventPage = () => {
 	return (
 		<div>
 			{/* Ближайшие события */}
-      <Card className="bg-black border-gray-800 text-white shadow-lg h-full ">
+      <Card className="bg-background border-border text-card-foreground shadow-lg h-full ">
         <CardHeader>
           <CardTitle>Ближайшие события</CardTitle>
         </CardHeader>
@@ -14,8 +14,8 @@ const EventPage = () => {
           <div className="space-y-4 text-sm">
             {upcomingEvents.map((event, index) => (
               <div key={index} className="flex item-center gap-4">
-                <div className="text-gray-300">{event.time}</div>
-                  <p className="text-white">{event.title}</p>
+                <div className="text-muted-foreground">{event.time}</div>
+                  <p className="text-card-foreground">{event.title}</p>
               </div>
             ))}
           </div>

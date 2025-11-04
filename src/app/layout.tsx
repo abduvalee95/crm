@@ -1,9 +1,9 @@
-import StoreProvider from '@/providers/StoreProvider';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
-import SidebarContainer from '../widgets/sidebar/ui/SidebarContainer';
-import './globals.css';
+import StoreProvider from '@/providers/StoreProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
+import type { Metadata, Viewport } from 'next'
+import { Inter } from 'next/font/google'
+import SidebarContainer from '../widgets/sidebar/ui/SidebarContainer'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -80,7 +80,7 @@ export default function RootLayout({
 						<a className="skip-to-content" href="#main-content">
 							Перейти к основному содержанию
 						</a>
-						<div className="flex min-h-screen bg-black text-white dark:bg-black">
+						<div className="flex min-h-screen bg-background text-foreground">
 							<SidebarContainer />
 							<main id="main-content" className="flex-1 focus:outline-none" tabIndex={-1}>
 								{children}

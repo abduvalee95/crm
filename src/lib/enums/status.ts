@@ -3,6 +3,10 @@ export enum ClientStatus {
 	new = 'Новый',
 	inactive = 'Неактивен',
 }
+export enum EmployeeStatus {
+	active = 'Активен',
+	on_leave = 'Неактивен',
+}
 
 export enum TaskStatus {
 	Todo = 'todo',
@@ -23,4 +27,11 @@ export enum Role{
   MANAGER = 'manager',
   ANALYST = 'analyst',
   SUPPORT = 'support'
+}
+
+export enum Performance{
+  EXCELLENT = 'excellent',
+  GOOD = 'good',
+  AVERAGE = 'average',
+  NEEDS_IMPROVEMENT = 'needs_improvement'
 }

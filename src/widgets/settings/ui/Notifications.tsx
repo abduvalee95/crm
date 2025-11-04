@@ -24,14 +24,14 @@ export default function Notifications() {
 	});
 
 	const [isLoading, setIsLoading] = useState(false);
- //bu erda email sms larga notificationlarga ozgartiradi
+	//bu erda email sms larga notificationlarga ozgartiradi
 	const handleChannelToggle = (channel: keyof Pick<NotificationPreferences, 'email' | 'push' | 'sms' | 'desktop'>) => {
 		setPreferences((prev) => ({
 			...prev,
 			[channel]: !prev[channel],
 		}));
 	};
-//bu erda categoriyalar ozgaradi
+	//bu erda categoriyalar ozgaradi
 	const handleCategoryToggle = (category: keyof NotificationPreferences['categories']) => {
 		setPreferences((prev) => ({
 			...prev,
@@ -41,19 +41,19 @@ export default function Notifications() {
 			},
 		}));
 	};
-//bu erda tezlik  ozgaradi kun  oy haftaga
+	//bu erda tezlik  ozgaradi kun  oy haftaga
 	const handleFrequencyChange = (frequency: NotificationPreferences['frequency']) => {
 		setPreferences((prev) => ({
 			...prev,
 			frequency,
 		}));
 	};
-//bu submit bosilganda saqlab qoladi 
+	//bu submit bosilganda saqlab qoladi
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 
-// bu api ni chaqiradi
+		// bu api ni chaqiradi
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
 		console.log('Notification preferences updated:', preferences);

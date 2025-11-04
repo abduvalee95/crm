@@ -43,15 +43,15 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
 
   if (!conversation) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-900">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl text-gray-400">💬</span>
+          <div className="w-16 h-16 bg-background border-border rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl text-muted-foreground">💬</span>
           </div>
-          <h3 className="text-xl font-medium text-white mb-2">
+          <h3 className="text-xl font-medium text-card-foreground mb-2">
             Выберите чат
           </h3>
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             Начните новую беседу или выберите существующую
           </p>
         </div>

@@ -12,7 +12,7 @@ const SidebarContainer = () => {
 
 	return (
 		<div
-			className={`sticky top-0 flex h-screen flex-shrink-0 flex-col overflow-y-auto border-r border-gray-800 bg-card/40 transition-[width] duration-300 ease-in-out ${widthClass}`}
+			className={`sticky top-0 flex h-screen flex-shrink-0 flex-col overflow-y-auto border-r border-gray-800 bg-card/40 transition-[width] duration-800 ease-in-out ${widthClass} cursor-pointer`}
 		>
 			<Menu />
 		</div>

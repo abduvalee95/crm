@@ -53,11 +53,6 @@ export default function TaskForm({ type, data, onCancel, onSuccess }: FormProps)
 
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
-			<div>
-				<h2 className="text-lg font-semibold">{type === 'create' ? 'Добавить задачу' : 'Редактировать задачу'}</h2>
-				<p className="text-sm text-muted-foreground">Заполните данные задачи</p>
-			</div>
-
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div>
 					<Input placeholder="Название" value={form.title} onChange={update('title')} aria-invalid={!!errors.title} />

@@ -1,13 +1,19 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { employeesData } from '@/lib/data/emloyers';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { getRoleBadge, getStatusBadge } from '@/features/employee/labels';
+import { Employee, employeesData } from '@/lib/data/emloyers';
+import { EmployeeStatus, Role } from '@/lib/enums/status';
 import { formatTime } from '@/shared/utils/dateUtils';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
 const EmployeesList = () => {
 	const [searchTerm, setSearchTerm] = useState('');
-	const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'on_leave'>('all');
-	const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'manager' | 'analyst' | 'support'>('all');
+	const [statusFilter, setStatusFilter] = useState<Employee['status'] | 'all'>('all');
+	const [roleFilter, setRoleFilter] = useState<Employee['role'] | 'all'>('all');
 
 	const filteredEmployees = employeesData.filter((employee) => {
 		const matchesSearch =
@@ -21,19 +27,11 @@ const EmployeesList = () => {
 		return matchesSearch && matchesStatus && matchesRole;
 	});
 
-	const getRoleLabel = (role: string) => {
-		switch (role) {
-			case 'admin':
-				return 'Админ';
-			case 'manager':
-				return 'Менеджер';
-			case 'analyst':
-				return 'Аналитик';
-			case 'support':
-				return 'Поддержка';
-			default:
-				return role;
-		}
+	const handleStatusFilter = (status: Employee['status'] | 'all') => {
+		setStatusFilter(status);
+	};
+	const handleRoleFilter = (role: Employee['role'] | 'all') => {
+		setRoleFilter(role);
 	};
 
 	return (
@@ -46,29 +44,62 @@ const EmployeesList = () => {
 							placeholder="Поиск сотрудников..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black"
 						/>
-						<select
-							value={statusFilter}
-							onChange={(e) => setStatusFilter(e.target.value as any)}
-							className="px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-						>
-							<option value="all">Все статусы</option>
-							<option value="active">Активные</option>
-							<option value="inactive">Неактивные</option>
-							<option value="on_leave">В отпуске</option>
-						</select>
-						<select
-							value={roleFilter}
-							onChange={(e) => setRoleFilter(e.target.value as any)}
-							className="px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-						>
-							<option value="all">Все роли</option>
-							<option value="admin">Админ</option>
-							<option value="manager">Менеджер</option>
-							<option value="analyst">Аналитик</option>
-							<option value="support">Поддержка</option>
-						</select>
+						{/* Status Filter */}
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="outline"
+									className="bg-card border-gray-700 text-white hover:bg-gray-500 rounded-lg w-50 justify-between"
+								>
+									{statusFilter === 'all' ? 'Все статусы' : getStatusBadge(statusFilter)}
+									<ChevronDown className="w-4 h-4 ml-2" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent
+								className="flex flex-col gap-2 bg-foreground
+						 border-gray-700 text-black w-50 rounded-lg p-2 user-select-none "
+							>
+								<DropdownMenuItem onClick={() => handleStatusFilter('all')}>Все Статусы</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleStatusFilter(EmployeeStatus.active)}>
+									{getStatusBadge(EmployeeStatus.active)}
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleStatusFilter(EmployeeStatus.on_leave)}>
+									{getStatusBadge(EmployeeStatus.on_leave)}
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+						{/* Role Filter */}
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="outline"
+									className="bg-card border-gray-700 text-white hover:bg-gray-500 rounded-lg w-50 justify-between"
+								>
+									{roleFilter === 'all' ? 'Все роли' : getRoleBadge(roleFilter)}
+									<ChevronDown className="w-4 h-4 ml-2" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent
+								className="flex flex-col gap-2 bg-foreground
+						 border-gray-700 text-black w-50 rounded-lg p-2 user-select-none "
+							>
+								<DropdownMenuItem onClick={() => handleRoleFilter('all')}>Все роли</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleRoleFilter(Role.ADMIN)}>
+									{getRoleBadge(Role.ADMIN)}
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleRoleFilter(Role.MANAGER)}>
+									{getRoleBadge(Role.MANAGER)}
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleRoleFilter(Role.ANALYST)}>
+									{getRoleBadge(Role.ANALYST)}
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => handleRoleFilter(Role.SUPPORT)}>
+									{getRoleBadge(Role.SUPPORT)}
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				</CardHeader>
 			</Card>
@@ -104,7 +135,9 @@ const EmployeesList = () => {
 											</div>
 											<div>
 												<span className="text-gray-500">Роль:</span>
-												<span className="text-white ml-2">{getRoleLabel(employee.role)}</span>
+												<span className="text-white ml-2">
+													{employee.role.charAt(0).toUpperCase() + employee.role.slice(1)}
+												</span>
 											</div>
 											<div>
 												<span className="text-gray-500">Email:</span>
@@ -122,16 +155,16 @@ const EmployeesList = () => {
 												<span className="text-gray-500">Статус:</span>
 												<span
 													className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-														employee.status === 'active'
+														employee.status === EmployeeStatus.active
 															? 'bg-green-100 text-green-800'
-															: employee.status === 'inactive'
+															: employee.status === EmployeeStatus.on_leave
 															? 'bg-red-100 text-red-800'
 															: 'bg-yellow-100 text-yellow-800'
 													}`}
 												>
-													{employee.status === 'active'
+													{employee.status === EmployeeStatus.active
 														? 'Активен'
-														: employee.status === 'inactive'
+														: employee.status === EmployeeStatus.on_leave
 														? 'Неактивен'
 														: 'В отпуске'}
 												</span>

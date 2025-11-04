@@ -1,3 +1,4 @@
+import { analyticsData } from '@/lib/data/mock'
 import CirleStatic from './ui/CirleStatic';
 import Conversion from './ui/Conversion';
 import EffectiveMeneger from './ui/EffectiveMeneger';
@@ -10,13 +11,13 @@ const AnalyticsBlock = () => {
 			<div className="max-w-8xl mx-auto">
 				<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
 					<div className="lg:col-span-2">
-						<RevenueDash />
+						<RevenueDash data={analyticsData.revenueData} />
 					</div>
 					<div className="lg:col-span-2">
 						<CirleStatic />
 					</div>
 					<div className="lg:col-span-2">
-						<Conversion />
+						<Conversion data={analyticsData.revenueData} />
 					</div>
 					<div className="lg:col-span-2">
 						<EffectiveMeneger />

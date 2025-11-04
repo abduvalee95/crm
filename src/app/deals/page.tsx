@@ -18,8 +18,6 @@ export default function DealPage() {
 		stageFilter,
 		setStageFilter,
 		filteredClients,
-		// sortBy,
-		// setSortBy
 	} = useClientFilter();
 
 	const handleViewChange = (view: ViewMode) => {
@@ -27,7 +25,7 @@ export default function DealPage() {
 	};
 
 	return (
-		<div className="bg-black flex-1 w-full min-h-screen p-4 space-y-6 shadow-lg">
+		<div className="bg-background flex-1 w-full min-h-screen p-4 space-y-6 shadow-lg">
 			<Header pageType="deals" activeView={activeView} onViewChange={handleViewChange} />
 			<DealSearchBar onSearchChange={setSearchTerm} onStatusFilter={setStageFilter} />
 			{/* Pass filtered clients list as deals */}

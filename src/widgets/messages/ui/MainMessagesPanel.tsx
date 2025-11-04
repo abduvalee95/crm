@@ -33,11 +33,11 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({
   }, [conversations, searchQuery]);
 
   return (
-    <div className=" border-r border-gray-700 flex flex-col h-full w-full">
+    <div className=" border-r border-border flex flex-col h-full w-full">
       {/* Header */}
-      <div className="p-4 border-b border-gray-700">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Сообщения</h2>
+          <h2 className="text-xl font-semibold text-card-foreground">Сообщения</h2>
         </div>
         
         {/* Search */}

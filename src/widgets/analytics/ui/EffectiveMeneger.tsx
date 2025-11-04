@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Employee, employeesData } from '@/lib/data/emloyers'
+import { Employee, employeesData } from '@/lib/data/emloyers';
 import { analyticsData } from '@/lib/data/mock';
-import { Client } from '@/lib/types/types';
+import { Performance } from '@/lib/enums/status';
 import { useMemo } from 'react';
 
 interface EffectProps {
@@ -12,7 +12,6 @@ interface EffectProps {
 const EffectiveMeneger = ({ searchTerm = '', statusFilter = 'all' }: EffectProps) => {
 	const filteredAndSortedClients = useMemo(() => {
 		let filtered = employeesData.map((employee) => employee);
-console.log(filtered)
 
 		// Filter by search term
 		if (searchTerm) {
@@ -28,13 +27,13 @@ console.log(filtered)
 			filtered = filtered.filter((client) => client.performance === statusFilter);
 		}
 		return filtered;
-	}, [searchTerm, statusFilter]); //sortBy
+	}, [searchTerm, statusFilter]);
 
 	return (
-		<Card className="bg-black border-gray-700 text-white shadow-xl">
+		<Card className="bg-background text-card-foreground border-border shadow-xl">
 			<CardHeader>
 				<CardTitle className="text-xl font-semibold">
-				Эффективность менеджеров
+					Эффективность менеджеров
 					{filteredAndSortedClients.length !== analyticsData.clientPerformance.length &&
 						` (${filteredAndSortedClients.length} of ${analyticsData.clientPerformance.length})`}
 				</CardTitle>
@@ -51,24 +50,32 @@ console.log(filtered)
 							>
 								<div className="flex-1">
 									<div className="flex items-center justify-between mb-1">
-										<span className="font-medium text-white">{client.name}</span>
-										<span className="text-green-400 font-semibold">₽{client.performance.toLocaleString()}</span>
+										<span className="font-medium text-card-foreground">{client.name}</span>
+										<span className="text-accent-green font-semibold">₽{client.revenue?.toLocaleString()}</span>
 									</div>
-									<span className="text-gray-300 text-sm">
+									<span className="text-muted-foreground text-sm">
 										{client.position} • {client.deals} сделок
 									</span>
 								</div>
 								<div className="ml-4">
 									<span
 										className={`px-2 py-1 rounded-full text-xs font-medium ${
-											client.status === 'active'
-												? 'bg-green-100 text-green-800'
-												: client.email === 'new'
-												? 'bg-blue-100 text-blue-800'
-												: 'bg-gray-100 text-gray-800'
+											client.performance === Performance.EXCELLENT
+												? 'bg-green-500/20 text-green-400 border border-green-500/30'
+												: client.performance === Performance.GOOD
+												? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+												: client.performance === Performance.AVERAGE
+												? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+												: 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
 										}`}
 									>
-										{/* {client.status === 'active' ? 'Активный' : client.performance=== 'new' ? 'Новый' : 'Неактивный'} */}
+										{client.performance === Performance.EXCELLENT
+											? 'Отлично'
+											: client.performance === Performance.GOOD
+											? 'Хорошо'
+											: client.performance === Performance.AVERAGE
+											? 'Средне'
+											: 'Нужно улучшение'}
 									</span>
 								</div>
 							</div>

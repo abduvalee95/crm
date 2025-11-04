@@ -63,12 +63,7 @@ export default function ClientForm({ type, data, onCancel, onSuccess }: ClientFo
 
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
-			<div>
-				<h2 className="text-lg font-semibold">{type === 'create' ? 'Добавить клиента' : 'Редактировать клиента'}</h2>
-				<p className="text-sm text-muted-foreground">Заполните данные клиента</p>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="flex flex-col gap-4">
 				<div>
 					<Input
 						placeholder="Имя"

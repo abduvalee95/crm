@@ -6,7 +6,7 @@ import { UserProfile } from '@/lib/interface/settings';
 import { Card } from '@/shared/ui/Card';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { Briefcase, Globe, Mail, Phone, Save, Upload, User } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Mock user data
 const mockUser: Partial<UserProfile> = {
@@ -33,6 +33,13 @@ export default function ProfileForm() {
 	});
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [avatar, setAvatar] = useState<string>(mockUser.avatar || '');
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		const saved = typeof window !== 'undefined' ? localStorage.getItem('profile.avatar') : null;
+		if (saved) setAvatar(saved);
+	}, []);
 
 	const handleInputChange = (field: string, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
@@ -45,9 +52,25 @@ export default function ProfileForm() {
 		// Simulate API call
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		console.log('Profile updated:', formData);
+		console.log('Profile updated:', { ...formData, avatar });
 		setIsLoading(false);
 		// Show success message
+	};
+
+	const handleAvatarButton = () => fileInputRef.current?.click();
+
+	const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = () => {
+			const dataUrl = reader.result as string;
+			setAvatar(dataUrl);
+			try {
+				localStorage.setItem('profile.avatar', dataUrl);
+			} catch {}
+		};
+		reader.readAsDataURL(file);
 	};
 
 	return (
@@ -59,15 +82,21 @@ export default function ProfileForm() {
 
 			{/* Avatar Section */}
 			<div className="flex items-center gap-6 p-6  rounded-lg border border-gray-600">
-				<Avatar className="w-24 h-24 border-2 border-gray-600">
-					<AvatarImage src={mockUser.avatar} className="object-cover" />
+				<Avatar className="w-24 h-24 border-2 border-gray-600 overflow-hidden rounded-full">
+					<AvatarImage src={avatar} className="object-cover w-full h-full" />
 					<AvatarFallback className="text-2xl font-bold bg-gray-700 text-white">
 						{mockUser.firstName?.[0]}
 						{mockUser.lastName?.[0]}
 					</AvatarFallback>
 				</Avatar>
 				<div className="space-y-2">
-					<Button variant="outline" className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600">
+					<input type="file" accept="image/*" ref={fileInputRef} onChange={handleAvatarChange} className="hidden" />
+					<Button
+						variant="outline"
+						className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+						onClick={handleAvatarButton}
+						type="button"
+					>
 						<Upload className="w-4 h-4 mr-2" />
 						Загрузить фото
 					</Button>

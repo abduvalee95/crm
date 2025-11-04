@@ -48,32 +48,32 @@ const DealKanbanView: React.FC<DealViewProps> = ({ deals }) => {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 			{(Object.keys(columns) as DealStage[]).map((stage) => (
-				<div key={stage} className="bg-black rounded-xl border border-gray-700 p-4 flex flex-col gap-4">
+				<div key={stage} className="bg-background rounded-xl border border-border p-4 flex flex-col gap-4">
 					<div className="flex justify-between items-center mb-4">
-						<h2 className="text-white text-lg font-semibold ">{stage}</h2>
-						<Badge className="bg-black border-gray-700 text-gray-300">{columns[stage].length}</Badge>
+						<h2 className="text-card-foreground text-lg font-semibold ">{stage}</h2>
+						<Badge className="bg-background border-border text-card-foreground">{columns[stage].length}</Badge>
 					</div>
 					<div className="space-y-4 flex flex-col">
 						{columns[stage].map((deal, idx) => (
-							<Card key={`${deal.company}-${deal.name}-${idx}`} className="bg-black border-gray-800 text-white">
+							<Card key={`${deal.company}-${deal.name}-${idx}`} className="bg-background border-border text-card-foreground">
 								<CardContent className="p-4">
 									<div className="flex items-start justify-between">
 										<div>
 											<h3 className="font-semibold">{deal.company}</h3>
-											<p className="text-sm text-gray-400">{deal.name}</p>
+											<p className="text-sm text-muted-foreground">{deal.name}</p>
 										</div>
-										<span className="border-gray-700 text-gray-300">{stageLabels(deal.stage)}</span>
+										<span className="border-border text-muted-foreground">{stageLabels(deal.stage)}</span>
 									</div>
 									{typeof deal.progress === 'number' && (
 										<div className="mt-3">
 											<div className="flex items-center justify-between text-sm">
-												<span className="text-gray-200">{deal.progress ?? 0} %</span>
+												<span className="text-muted-foreground">{deal.progress ?? 0} %</span>
 											</div>
 											<Progress value={deal.progress} className="mt-2 h-2" />
 										</div>
 									)}
 
-									<div className="mt-3 flex items-center justify-between text-sm text-gray-400">
+									<div className="mt-3 flex items-center justify-between text-sm text-muted-foreground">
 										<div className="flex items-center gap-2">
 											<Image src="/clients.png" alt="client" width={15} height={15} className="invert" />
 											<span>{deal.responsible}</span>

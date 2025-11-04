@@ -1,4 +1,3 @@
-// src/widgets/messages/ui/SearchInput.tsx
 import { Search } from 'lucide-react';
 import React from 'react';
 

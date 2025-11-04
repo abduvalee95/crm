@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 type FormProps = { type: 'create' | 'update'; data?: any; onCancel?: () => void; onSuccess?: (r?: any) => void };
 
@@ -54,14 +56,7 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
-			<div>
-				<h2 className="text-lg font-semibold">
-					{type === 'create' ? 'Добавить сотрудника' : 'Редактировать сотрудника'}
-				</h2>
-				<p className="text-sm text-muted-foreground">Заполните данные сотрудника</p>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="flex flex-col gap-4">
 				<div>
 					<Input placeholder="Имя" value={form.name} onChange={update('name')} aria-invalid={!!errors.name} />
 					{errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
@@ -93,27 +88,57 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 					{errors.department && <p className="mt-1 text-xs text-red-500">{errors.department}</p>}
 				</div>
 				<div>
-					<select
-						value={form.role}
-						onChange={update('role')}
-						className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] md:text-sm"
-					>
-						<option value="admin">Админ</option>
-						<option value="manager">Менеджер</option>
-						<option value="analyst">Аналитик</option>
-						<option value="support">Поддержка</option>
-					</select>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								className="w-full justify-between bg-background border-border text-card-foreground hover:bg-accent"
+								type="button"
+							>
+								{form.role}
+								<ChevronDown className="w-4 h-4 ml-2" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'admin' }))}>Админ</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'manager' }))}>
+								Менеджер
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'analyst' }))}>
+								Аналитик
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'support' }))}>
+								Поддержка
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
+
 				<div>
-					<select
-						value={form.status}
-						onChange={update('status')}
-						className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] md:text-sm"
-					>
-						<option value="active">Активен</option>
-						<option value="inactive">Неактивен</option>
-						<option value="on_leave">В отпуске</option>
-					</select>
+					<DropdownMenu>
+						{' '}
+						<DropdownMenuTrigger>
+							<Button
+								variant="outline"
+								className="w-full justify-between bg-background border-border text-card-foreground hover:bg-accent"
+								type="button"
+							>
+								{form.status}
+								<ChevronDown className="w-4 h-4 ml-2" />
+							</Button>{' '}
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'active' }))}>
+								Активен
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'inactive' }))}>
+								Неактивен
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'on_leave' }))}>
+								В отпуске
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
 			</div>
 

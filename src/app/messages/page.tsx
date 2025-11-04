@@ -1,6 +1,6 @@
 'use client';
 import { dataConversations } from '@/entities/message/model/mock';
-import { ConversationPanel } from '@/features/chat/ui/ConversationPanel'
+import { ConversationPanel } from '@/features/chat/ui/ConversationPanel';
 import { Conversation, Message } from '@/lib/interface/message';
 import { MainMessagesPanel } from '@/widgets/messages/ui/MainMessagesPanel';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,8 +37,8 @@ const MessagesPage = () => {
 		console.log('send message', content);
 	};
 	return (
-		<div className="flex bg-black min-h-screen p-6  shadow-lg gap-4 rounded-lg">
-			<div className="w-1/3 border border-gray-700 rounded-lg rounded-r-none">
+		<div className="flex bg-background min-h-screen p-6  shadow-lg gap-4 rounded-lg">
+			<div className="w-1/3 border border-border rounded-lg rounded-r-none">
 				<MainMessagesPanel
 					conversations={dataConversations}
 					onConversationSelect={handleConversationSelect}
@@ -46,7 +46,7 @@ const MessagesPage = () => {
 					onNewConversation={handleNewConversation}
 				/>
 			</div>
-			<div className="w-full border border-gray-700 rounded-lg rounded-l-none">
+			<div className="w-full border border-border rounded-lg rounded-l-none">
 				<ConversationPanel
 					conversation={activeConversation}
 					messages={messages}
