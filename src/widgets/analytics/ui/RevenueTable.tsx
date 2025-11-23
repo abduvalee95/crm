@@ -46,7 +46,7 @@ const RevenueTable = () => {
 	];
 
 	return (
-		<Card className="bg-black border-gray-700 text-white shadow-xl">
+		<Card className="bg-background border-gray-700 text-card-foreground shadow-xl">
 			<CardHeader>
 				<CardTitle className="text-xl font-semibold">Сводная таблица по источникам</CardTitle>
 			</CardHeader>
@@ -66,7 +66,7 @@ const RevenueTable = () => {
 						<tbody>
 							{tableData.map((row, index) => (
 								<tr key={index} className="border-b border-gray-800 hover:bg-gray-900/50 transition-colors">
-									<td className="py-4 px-4 font-medium text-white">{row.source}</td>
+									<td className="py-4 px-4 font-medium text-card-foreground">{row.source}</td>
 									<td className="py-4 px-4 text-right text-gray-300">{row.clients}</td>
 									<td className="py-4 px-4 text-right text-gray-300">{row.deals}</td>
 									<td className="py-4 px-4 text-right text-green-400 font-semibold">₽{row.revenue.toLocaleString()}</td>
@@ -89,17 +89,17 @@ const RevenueTable = () => {
 						</tbody>
 						<tfoot>
 							<tr className="border-t-2 border-gray-600 bg-gray-900/50">
-								<td className="py-4 px-4 font-bold text-white">Итого</td>
-								<td className="py-4 px-4 text-right font-bold text-white">
+								<td className="py-4 px-4 font-bold text-card-foreground">Итого</td>
+								<td className="py-4 px-4 text-right font-bold text-card-foreground">
 									{tableData.reduce((sum, row) => sum + row.clients, 0)}
 								</td>
-								<td className="py-4 px-4 text-right font-bold text-white">
+								<td className="py-4 px-4 text-right font-bold text-card-foreground">
 									{tableData.reduce((sum, row) => sum + row.deals, 0)}
 								</td>
 								<td className="py-4 px-4 text-right font-bold text-green-400">
 									₽{tableData.reduce((sum, row) => sum + row.revenue, 0).toLocaleString()}
 								</td>
-								<td className="py-4 px-4 text-right font-bold text-white">
+								<td className="py-4 px-4 text-right font-bold text-card-foreground">
 									{Math.round(
 										(tableData.reduce((sum, row) => sum + row.deals, 0) /
 											tableData.reduce((sum, row) => sum + row.clients, 0)) *
@@ -107,7 +107,7 @@ const RevenueTable = () => {
 									)}
 									%
 								</td>
-								<td className="py-4 px-4 text-right font-bold text-white">
+								<td className="py-4 px-4 text-right font-bold text-card-foreground">
 									₽
 									{Math.round(
 										tableData.reduce((sum, row) => sum + row.revenue, 0) /

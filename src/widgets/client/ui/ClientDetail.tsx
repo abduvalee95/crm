@@ -3,21 +3,26 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { getStatusBadge } from '@/features/client/labels';
-import { recentClients } from '@/lib/data/client';
 import {
+	ClientDeal,
 	clientDeals,
+	ClientDocument,
 	clientDocuments,
 	clientInteractions,
+	ClientTask,
 	clientTasks,
+	Interaction,
 	InteractionType,
 } from '@/lib/data/clientInteractions';
+import { fetchClientById } from '@/shared/store/clientSlice';
+import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import * as Avatar from '@radix-ui/react-avatar';
 import { ArrowLeft, Building2, Calendar, FileText, Mail, MessageCircle, Phone } from 'lucide-react';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface ClientDetailProps {
-	clientId: number;
+	clientId: string;
 	onBack?: () => void;
 }
 
@@ -26,29 +31,63 @@ type TabType = 'interactions' | 'deals' | 'tasks' | 'documents';
 const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 	const [activeTab, setActiveTab] = useState<TabType>('interactions');
 
-	const client = useMemo(() => {
-		return recentClients.find((c) => c.id === clientId);
-	}, [clientId]);
+	const dispatch = useAppDispatch();
+	const client = useAppSelector((state) => state.client.currentClient);
+	const isLoading = useAppSelector((state) => state.client.isLoading);
+	const error = useAppSelector((state) => state.client.error);
+
+	// Client'ni ID bo'yicha yuklash
+	useEffect(() => {
+		if (clientId) {
+			dispatch(fetchClientById(clientId));
+		}
+	}, [dispatch, clientId]);
 
 	const interactions = useMemo(() => {
-		return clientInteractions[clientId] || [];
+		return clientInteractions[parseInt(clientId)] || [];
 	}, [clientId]);
 
 	const deals = useMemo(() => {
-		return clientDeals[clientId] || [];
+		return clientDeals[parseInt(clientId)] || [];
 	}, [clientId]);
 
 	const tasks = useMemo(() => {
-		return clientTasks[clientId] || [];
+		return clientTasks[parseInt(clientId)] || [];
 	}, [clientId]);
 
 	const documents = useMemo(() => {
-		return clientDocuments[clientId] || [];
+		return clientDocuments[parseInt(clientId)] || [];
 	}, [clientId]);
+
+	if (isLoading) {
+		return (
+			<div className="flex-1 min-h-screen p-6 bg-background text-foreground">
+				<div className="text-center py-8">
+					<p className="text-gray-400">Загрузка...</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex-1 min-h-screen p-6 bg-background text-foreground">
+				<div className="text-center py-8">
+					<p className="text-red-400">{error}</p>
+					{onBack && (
+						<Button onClick={onBack} variant="outline" className="mt-4">
+							<ArrowLeft className="w-4 h-4 mr-2" />
+							Назад
+						</Button>
+					)}
+				</div>
+			</div>
+		);
+	}
 
 	if (!client) {
 		return (
-			<div className="flex-1 min-h-screen p-6 bg-black text-white">
+				<div className="flex-1 min-h-screen p-6 bg-background text-foreground">
 				<div className="text-center py-8">
 					<p className="text-gray-400">Клиент не найден</p>
 					{onBack && (
@@ -91,7 +130,7 @@ const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 			{interactions.length === 0 ? (
 				<p className="text-gray-400 text-center py-8">Нет взаимодействий</p>
 			) : (
-				interactions.map((interaction) => (
+				interactions.map((interaction: Interaction) => (
 					<div
 						key={interaction.id}
 						className="flex items-start gap-4 p-4 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700/50 transition-colors"
@@ -124,7 +163,7 @@ const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 			{deals.length === 0 ? (
 				<p className="text-gray-400 text-center py-8">Нет сделок</p>
 			) : (
-				deals.map((deal) => (
+				deals.map((deal: ClientDeal) => (
 					<div
 						key={deal.id}
 						className="p-4 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700/50 transition-colors"
@@ -156,7 +195,7 @@ const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 			{tasks.length === 0 ? (
 				<p className="text-gray-400 text-center py-8">Нет задач</p>
 			) : (
-				tasks.map((task) => (
+				tasks.map((task: ClientTask) => (
 					<div
 						key={task.id}
 						className="p-4 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700/50 transition-colors"
@@ -196,7 +235,7 @@ const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 			{documents.length === 0 ? (
 				<p className="text-gray-400 text-center py-8">Нет документов</p>
 			) : (
-				documents.map((doc) => (
+				documents.map((doc: ClientDocument) => (
 					<div
 						key={doc.id}
 						className="flex items-center justify-between p-4 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700/50 transition-colors"
@@ -276,7 +315,7 @@ const ClientDetail = ({ clientId, onBack }: ClientDetailProps) => {
 								</div>
 								<div className="flex items-center gap-2 text-muted-foreground">
 									<Phone className="w-4 h-4" />
-									<span>{client.number}</span>
+									<span>{client.phone}</span>
 								</div>
 								<div className="flex items-center gap-2 text-muted-foreground">
 									<Mail className="w-4 h-4" />

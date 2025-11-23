@@ -35,9 +35,9 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 				{/* Conversation Info */}
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center justify-between mb-1">
-						<h3 className="text-white font-medium truncate">{conversation.title}</h3>
+						<h3 className="text-card-foreground font-medium truncate">{conversation.title}</h3>
 						{conversation.lastMessage && (
-							<span className="text-xs text-white">{formatTime(conversation.lastMessage.timestamp)}</span>
+							<span className="text-xs text-white">{formatTime(new Date(conversation.lastMessage.createdAt as string))}</span>
 						)}
 					</div>
 

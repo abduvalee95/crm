@@ -59,7 +59,7 @@ export default function ThemeSection() {
 
 	if (!mounted) {
 		return (
-			<Card className="space-y-8 bg-black text-white border border-gray-700 shadow-xl">
+			<Card className="space-y-8 bg-background text-card-foreground border border-gray-700 shadow-xl">
 				<div className="flex items-center gap-3">
 					<Palette className="w-6 h-6 text-blue-400" />
 					<h2 className="text-2xl font-bold">Настройки темы</h2>
@@ -73,7 +73,7 @@ export default function ThemeSection() {
 	}
 
 	return (
-		<Card className="space-y-8 bg-black text-white border border-gray-700 shadow-xl">
+		<Card className="space-y-8 bg-background text-card-foreground border border-gray-700 shadow-xl">
 			<div className="flex items-center gap-3">
 				<Palette className="w-6 h-6 text-blue-400" />
 				<h2 className="text-2xl font-bold">Настройки темы</h2>
@@ -81,7 +81,7 @@ export default function ThemeSection() {
 
 			<form onSubmit={handleSubmit} className="space-y-8">
 				<div className="space-y-6">
-					<h3 className="text-lg font-semibold text-gray-200 border-b border-gray-700 pb-2">Цветовая схема</h3>
+					<h3 className="text-lg font-semibold text-card-foreground border-b border-gray-700 pb-2">Цветовая схема</h3>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{themeOptions.map((option) => (
@@ -100,16 +100,15 @@ export default function ThemeSection() {
 									</div>
 									<div>
 										<h4 className="font-semibold">{option.label}</h4>
-										<p className="text-sm text-gray-400">{option.description}</p>
+										<p className="text-sm text-muted-foreground">{option.description}</p>
 									</div>
 								</div>
 
 								{/* Theme Preview */}
 								<div className={`${option.preview} p-4 rounded-lg border border-gray-600`}>
 									<div className="flex items-center gap-2 mb-2">
-										<div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-										<div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-										<div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+										<div className="w-3 h-3 bg-muted-foreground rounded-full"></div>
+										<div className="w-3 h-3 bg-muted-foreground rounded-full"></div>
 									</div>
 									<div className="space-y-2">
 										<div className="h-2 bg-gray-400 rounded w-3/4"></div>

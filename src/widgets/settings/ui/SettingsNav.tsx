@@ -2,10 +2,10 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import ProfileForm from './ProfileForm'
+import ProfileForm from './ProfileForm';
 
 const Nav = [
-	{ href: '/profile', label: 'Профиль', component:<ProfileForm/>},
+	{ href: '/profile', label: 'Профиль', component: <ProfileForm /> },
 	{ href: '/settings/notifications', label: 'Уведомления' },
 	{ href: '/settings/theme', label: 'Тема' },
 	{ href: '/settings/access', label: 'Доступы' },
@@ -13,9 +13,9 @@ const Nav = [
 ];
 
 export function SettingsNav() {
-	const pathname = usePathname()
+	const pathname = usePathname();
 	return (
-		<nav className="flex bg-gray-800 rounded-lg justify-around item-center">
+		<nav className="flex bg-background border border-gray-700 rounded-lg justify-around item-center">
 			{Nav.map((item) => (
 				<Link
 					href={item.href}

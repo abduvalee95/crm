@@ -1,9 +1,10 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { recentClients } from '@/lib/data/client';
 import { Client } from '@/lib/types/types';
-import { useMemo } from 'react';
+import { fetchClients } from '@/shared/store/clientSlice';
+import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
+import { useEffect, useMemo } from 'react';
 import { ClientListItem } from './ClientListItem';
 
 interface ClientsHomePageProps {
@@ -12,16 +13,29 @@ interface ClientsHomePageProps {
 }
 
 const ClientsHomePage = ({ searchTerm = '', statusFilter = 'all' }: ClientsHomePageProps) => {
+	const dispatch = useAppDispatch();
+	const clients = useAppSelector((state) => state.client.clients);
+	const isLoading = useAppSelector((state) => state.client.isLoading);
+	const error = useAppSelector((state) => state.client.error);
+
+	// Component mount bo'lganda backend'dan clients yuklash
+	useEffect(() => {
+		if (clients.length === 0 && !isLoading) {
+			dispatch(fetchClients());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const filteredAndSortedClients = useMemo(() => {
-		let filtered = recentClients;
+		let filtered = [...clients];
 
 		// Filter by search term
 		if (searchTerm) {
 			filtered = filtered.filter(
 				(client) =>
 					client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					client.number.includes(searchTerm),
+					client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.phone?.includes(searchTerm),
 			);
 		}
 
@@ -31,7 +45,7 @@ const ClientsHomePage = ({ searchTerm = '', statusFilter = 'all' }: ClientsHomeP
 		}
 
 		return filtered;
-	}, [searchTerm, statusFilter]);
+	}, [clients, searchTerm, statusFilter]);
 
 	return (
 		<div>
@@ -39,12 +53,16 @@ const ClientsHomePage = ({ searchTerm = '', statusFilter = 'all' }: ClientsHomeP
 				<CardHeader className="flex flex-row items-center justify-between">
 					<CardTitle>
 						Клиенты
-						{filteredAndSortedClients.length !== recentClients.length &&
-							` (${filteredAndSortedClients.length} из ${recentClients.length})`}
+						{filteredAndSortedClients.length !== clients.length &&
+							` (${filteredAndSortedClients.length} из ${clients.length})`}
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					{filteredAndSortedClients.length === 0 ? (
+					{isLoading ? (
+						<div className="text-center py-8 text-gray-400">Загрузка...</div>
+					) : error ? (
+						<div className="text-center py-8 text-red-400">{error}</div>
+					) : filteredAndSortedClients.length === 0 ? (
 						<div className="text-center py-8 text-gray-400">Клиенты не найдены</div>
 					) : (
 						filteredAndSortedClients.map((client) => <ClientListItem key={client.id} client={client} />)

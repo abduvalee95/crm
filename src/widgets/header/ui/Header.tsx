@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import pageConfigs from '@/lib/config/headerConf';
 import { downloadCSV } from '@/lib/cvsDownloader';
-import { analyticsData } from '@/lib/data/mock';
+
 import { ViewMode } from '@/lib/enums/deal';
 import { HeaderProps } from '@/lib/interface/header';
 import type { AnalyticsPeriod } from '@/shared/store/analyticsSlice';
@@ -29,10 +29,11 @@ const Header: React.FC<HeaderProps> = ({
 
 	const dispatch = useAppDispatch();
 	const analyticsPeriod = useAppSelector((s) => s.analytics?.period);
+	const revenueData = useAppSelector((s) => s.analytics.revenueData);
 	const monthsMap: Record<string, number> = { year: 12, quarter: 3, month: 1 };
 	const exportAnalytics = () => {
 		const months = monthsMap[analyticsPeriod || 'year'];
-		const filtered = analyticsData.revenueData.slice(-months);
+		const filtered = revenueData.slice(-months);
 		const rows = filtered.map((p) => ({ period: p.name, revenueK: p.revenue, profitK: p.profit }));
 		downloadCSV(rows, { filename: `analytics_${analyticsPeriod}.csv` });
 	};
@@ -65,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({
 								<Button
 									variant="outline"
 									size="sm"
-									className="gap-2 bg-card border-gray-700 text-white hover:bg-gray-500 rounded-lg w-30 justify-between cursor-pointer"
+									className="gap-2 bg-background border-gray-700 text-card-foreground hover:bg-gray-500 rounded-lg w-30 justify-between cursor-pointer"
 								>
 									{
 										({ year: 'За год', quarter: 'За квартал', month: 'За месяц' } as Record<AnalyticsPeriod, string>)[
@@ -77,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
 								align="end"
-								className="flex flex-col gap-2 bg-foreground border-gray-700 text-black w-30 rounded-lg p-2 user-select-none"
+								className="flex flex-col gap-2 bg-background border-gray-700 text-card-foreground w-30 rounded-lg p-2 user-select-none"
 							>
 								<DropdownMenuItem onClick={() => dispatch(setPeriod('year'))} className="cursor-pointer">
 									За год

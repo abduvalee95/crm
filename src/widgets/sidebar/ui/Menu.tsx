@@ -1,12 +1,17 @@
 'use client';
 
+import { logOut } from '@/features/auth';
+import { formatAvatarUrl } from '@/lib/config/config';
+import { Role } from '@/lib/enums/status';
 import { useThemeSettings } from '@/providers/ThemeProvider';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import { toggleSidebar } from '@/shared/store/uiSlice';
-import { PanelLeftClose, PanelRight } from 'lucide-react';
+import { fetchCurrentUser } from '@/shared/store/userSlice';
+import { LogIn, LogOut, PanelLeftClose, PanelRight, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 const items = [
 	{ href: '/', icon: '/home.png', label: 'Главная' },
@@ -24,6 +29,22 @@ const Menu = () => {
 	const { fontSize, density } = useThemeSettings();
 	const dispatch = useAppDispatch();
 	const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
+	const user = useAppSelector((state) => state.user.user);
+	const isLoading = useAppSelector((state) => state.user.isLoading);
+
+	// Client-side mounted
+	useEffect(() => {
+		// Bu useEffect faqat mount
+		if (typeof window === 'undefined') return;
+
+		const token = localStorage.getItem('token');
+		console.log('Menu useEffect - token :', token);
+
+		if (token && token.trim() && !user && !isLoading) {
+			console.log('Dispatching fetchCurrentUser from Menu');
+			dispatch(fetchCurrentUser());
+		}
+	}, [dispatch, user, isLoading]);
 
 	const getFontSizeClass = () => {
 		switch (fontSize) {
@@ -54,6 +75,18 @@ const Menu = () => {
 	const fontSizeClass = getFontSizeClass();
 	const spacingClass = getSpacingClass();
 	const linkBaseClasses = sidebarOpen ? 'justify-start gap-3 px-4' : 'justify-center px-3';
+
+	const getRoleLabel = (role?: Role): string => {
+		if (!role) return '';
+		const roleLabels: Record<Role, string> = {
+			[Role.ADMIN]: 'Администратор',
+			[Role.MANAGER]: 'Менеджер',
+			[Role.ANALYST]: 'Аналитик',
+			[Role.SUPPORT]: 'Поддержка',
+			[Role.USER]: 'Пользователь',
+		};
+		return roleLabels[role] || role;
+	};
 
 	return (
 		<aside
@@ -104,13 +137,72 @@ const Menu = () => {
 					sidebarOpen ? 'gap-3' : 'justify-center'
 				}`}
 			>
-				<div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
-					Ю
-				</div>
+				{user?.avatar && formatAvatarUrl(user?.avatar) ? (
+					<Image
+						src={formatAvatarUrl(user?.avatar)}
+						alt={user.fullName || 'User'}
+						width={32}
+						height={32}
+						className="rounded-full object-cover w-8 h-8"
+					/>
+				) : (
+					<div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+						{user?.fullName
+							? user.fullName
+									.split(' ')
+									.map((n) => n[0])
+									.join('')
+									.toUpperCase()
+									.slice(0, 2)
+							: 'U'}
+					</div>
+				)}
 				{sidebarOpen && (
-					<div>
-						<p className="text-sm font-medium text-white">Юсуф</p>
-						<p className="text-xs text-gray-400">Администратор</p>
+					<div className="flex flex-col gap-2 flex-1 min-w-0">
+						{user ? (
+							<>
+								<div className="flex flex-col min-w-0">
+									<span className={`${fontSizeClass} font-semibold leading-tight truncate`}>{user.fullName}</span>
+									{user.role && (
+										<span className="text-xs text-muted-foreground truncate">{getRoleLabel(user.role)}</span>
+									)}
+									{user.position && <span className="text-xs text-muted-foreground truncate">{user.position}</span>}
+								</div>
+								<button
+									onClick={() => logOut(dispatch)}
+									className="flex items-center gap-2 px-3 py-2 rounded-lg text-white transition hover:bg-accent mt-1"
+									aria-label="Выйти из системы"
+								>
+									<LogOut className="h-4 w-4" />
+									<span className={`${fontSizeClass} leading-tight`}>Выйти</span>
+								</button>
+							</>
+						) : isLoading ? (
+							<div className="text-sm text-muted-foreground">Загрузка...</div>
+						) : (
+							<div className="flex flex-col gap-2">
+								<Link
+									href="/login"
+									className={`flex items-center gap-2 px-3 py-2 rounded-lg text-white transition ${
+										pathname === '/login' ? 'bg-primary' : 'hover:bg-accent'
+									}`}
+									aria-current={pathname === '/login' ? 'page' : undefined}
+								>
+									<LogIn className="h-4 w-4" />
+									<span className={`${fontSizeClass} leading-tight`}>Войти</span>
+								</Link>
+								<Link
+									href="/register"
+									className={`flex items-center gap-2 px-3 py-2 rounded-lg text-white transition ${
+										pathname === '/register' ? 'bg-primary' : 'hover:bg-accent'
+									}`}
+									aria-current={pathname === '/register' ? 'page' : undefined}
+								>
+									<UserPlus className="h-4 w-4" />
+									<span className={`${fontSizeClass} leading-tight`}>Регистрация</span>
+								</Link>
+							</div>
+						)}
 					</div>
 				)}
 			</div>

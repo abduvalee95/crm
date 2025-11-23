@@ -69,8 +69,8 @@ const AccessSection = () => {
 	return (
 		<div className="space-y-8">
 			{/* Roles and Permissions Section */}
-			<div className="bg-card text-card-foreground rounded-xl shadow-sm border border-border overflow-hidden">
-				<div className="px-6 py-4 border-b border-border bg-card">
+			<div className="bg-background text-card-foreground rounded-xl shadow-sm border border-border overflow-hidden">
+				<div className="px-6 py-4 border-b border-border bg-background">
 					<h2 className="text-lg font-semibold">Роли и разрешения</h2>
 					<p className="text-sm text-muted-foreground mt-1">Системные роли</p>
 				</div>
@@ -97,7 +97,7 @@ const AccessSection = () => {
 					</div>
 				</div>
 
-				<div className="px-6 py-4 border-t border-border bg-card">
+				<div className="px-6 py-4 border-t border-border bg-background">
 					<h2 className="text-lg font-semibold">Настройки безопасности</h2>
 				</div>
 

@@ -9,10 +9,10 @@ export enum EmployeeStatus {
 }
 
 export enum TaskStatus {
-	Todo = 'todo',
-	InProgress = 'in_progress',
-	Blocked = 'blocked',
-	Done = 'done',
+	PENDING = 'pending',
+	IN_PROGRESS = 'in_progress',
+	COMPLETED = 'completed',
+	CANCELLED = 'cancelled',
 }
 
 export enum OnlineStatus {
@@ -26,7 +26,8 @@ export enum Role{
   ADMIN = 'admin',
   MANAGER = 'manager',
   ANALYST = 'analyst',
-  SUPPORT = 'support'
+  SUPPORT = 'support',
+  USER = 'user'
 }
 
 export enum Performance{

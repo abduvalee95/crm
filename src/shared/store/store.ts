@@ -1,11 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
 import analyticsReducer from './analyticsSlice';
+import clientReducer from './clientSlice';
+import dealReducer from './dealSlice';
+import employeeReducer from './employeeSlice';
 import uiReducer from './uiSlice';
+import userReducer from './userSlice';
 
 export const store = configureStore({
 	reducer: {
 		ui: uiReducer,
 		analytics: analyticsReducer,
+		user: userReducer,
+		employee: employeeReducer,
+		client: clientReducer,
+		deal: dealReducer,
 	},
 	devTools: process.env.NODE_ENV !== 'production',
 });

@@ -1,5 +1,4 @@
 'use client';
-import { analyticsData } from '@/lib/data/mock';
 import { useAppSelector } from '@/shared/store/hooks';
 import CirleStatic from '@/widgets/analytics/ui/CirleStatic';
 import Conversion from '@/widgets/analytics/ui/Conversion';
@@ -20,11 +19,13 @@ type PeriodKey = (typeof PERIODS)[number]['key'];
 
 export default function AnalyticsPage() {
 	const period = useAppSelector((s) => s.analytics.period) as PeriodKey;
+	const revenueData = useAppSelector((s) => s.analytics.revenueData);
+	const monthlyMetrics = useAppSelector((s) => s.analytics.monthlyMetrics);
 
 	const revenueDataFiltered = useMemo(() => {
 		const months = PERIODS.find((p) => p.key === period)!.months;
-		return analyticsData.revenueData.slice(-months);
-	}, [period]);
+		return revenueData.slice(-months);
+	}, [period, revenueData]);
 
 	const totals = useMemo(() => {
 		const totalRevenueK = revenueDataFiltered.reduce((sum, p) => sum + p.revenue, 0);
@@ -37,13 +38,13 @@ export default function AnalyticsPage() {
 	}, [revenueDataFiltered]);
 
 	return (
-			<div className="flex-1 min-h-screen p-4 shadow-lg bg-background">
+		<div className="flex-1 min-h-screen p-4 shadow-lg bg-background">
 			<Header pageType="analytics" />
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 mt-4">
 				<StatCard title="Общий доход" value={totals.revenueDisplay} change="" icon={'/clients.png'} />
-				<StatCard title="Сделки закрыты" value="156" change="" icon={'/deal.png'} />
-				<StatCard title="Новые клиенты" value="23" change="" icon={'/tasks.png'} />
+				<StatCard title="Сделки закрыты" value={monthlyMetrics.closedDeals.toString()} change="" icon={'/deal.png'} />
+				<StatCard title="Новые клиенты" value={monthlyMetrics.newClients.toString()} change="" icon={'/tasks.png'} />
 				<StatCard title="Конверсия" value={totals.conversionDisplay} change="" icon={'/dollor.png'} />
 			</div>
 

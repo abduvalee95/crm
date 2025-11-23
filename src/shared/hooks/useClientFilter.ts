@@ -15,8 +15,8 @@ export const useClientFilter = () => {
 			filtered = filtered.filter(
 				(client) =>
 					client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					client.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					client.number.includes(searchTerm),
+					client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					client.phone?.includes(searchTerm),
 			);
 		}
 

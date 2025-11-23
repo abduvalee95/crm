@@ -7,25 +7,25 @@ import React from 'react';
 
 const statusLabel = (status: TaskStatus) => {
 	switch (status) {
-		case TaskStatus.Todo:
+		case TaskStatus.PENDING:
 			return (
 				<Badge variant="default" className="bg-blue-600/20 text-blue-400 border-none p-2">
 					Новый
 				</Badge>
 			);
-		case TaskStatus.InProgress:
+		case TaskStatus.IN_PROGRESS:
 			return (
 				<Badge variant="default" className="bg-green-600/20 text-green-400 border-none p-2">
 					В работе
 				</Badge>
 			);
-		case TaskStatus.Blocked:
+		case TaskStatus.CANCELLED:
 			return (
 				<Badge variant="destructive" className="bg-red-600/20 text-red-400 border-none p-2">
 					Заблокировано
 				</Badge>
 			);
-		case TaskStatus.Done:
+		case TaskStatus.COMPLETED:
 			return (
 				<Badge variant="secondary" className="bg-gray-600/20 text-gray-400 border-none p-2">
 					Готово
@@ -61,7 +61,7 @@ const TaskTableView: React.FC<TaskViewProps> = ({ tasks }) => {
 							<div className="flex items-center gap-3 text-muted-foreground text-sm mt-2">
 								<span>{task.assignee ?? '—'}</span>
 								<span className="uppercase">{task.priority ?? 'medium'}</span>
-								<span>{task.deadline ?? ''}</span>
+								<span>{task.deadline ?? task.dueDate ?? ''}</span>
 							</div>
 						</div>
 						<TableCell className="text-right">

@@ -1,11 +1,16 @@
 export interface Message {
   id: string;
   content: string;
-  senderId: string;
-  receiverId: string;
-  timestamp: Date;
   isRead: boolean;
-  type: 'text' | 'image' | 'file';
+  clientId?: string; // Backend bilan moslash
+  employeeId?: string; // Backend bilan moslash
+  createdAt?: string; // Backend bilan moslash
+  updatedAt?: string; // Backend bilan moslash
+  // Frontend uchun qo'shimcha maydonlar (optional)
+  senderId?: string; // Frontend uchun
+  receiverId?: string; // Frontend uchun
+  timestamp?: Date; // Frontend uchun (createdAt dan olinadi)
+  type?: 'text' | 'image' | 'file'; // Frontend uchun
 }
 export interface Conversation {
   id: string;

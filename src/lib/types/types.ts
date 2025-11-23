@@ -15,32 +15,27 @@ export type Event = {
   description: string;
 };
 export type Client = {
-  id: number;
+  id: string; // UUID - Backend bilan moslash
   name: string;
-  company: string;
+  company?: string; // Optional - Backend bilan moslash
   email: string;
+  phone?: string; // Backend bilan moslash (number o'rniga)
   status: ClientStatus;
-  number: string;
-  avatar: string;
-  stage: DealStage
+  notes?: string; // Backend bilan moslash
+  createdById?: string; // Backend bilan moslash
+  createdAt?: string;
+  updatedAt?: string;
+  // Frontend uchun qo'shimcha maydonlar (optional)
+  avatar?: string;
+  stage?: DealStage; // Client uchun emas, Deal uchun
   responsible?: string;
   deadline?: string;
   amount?: number;
   progress?: number;
-  createdAt?: string;
-  updatedAt?: string;
 };
 
-export type MinimalDeal = (Deal | Client) & {
-	id: number;
-	name: string;
-	company: string;
-	stage: DealStage;
-	progress?: number;
-	responsible?: string;
-	deadline?: string;
-	amount?: number;
-	createdAt?: string;
-	updatedAt?: string;
+export type MinimalDeal = Deal & {
+	// MinimalDeal endi Deal interface dan foydalanadi
+	// Qo'shimcha maydonlar Deal interface da allaqachon bor
 };
 

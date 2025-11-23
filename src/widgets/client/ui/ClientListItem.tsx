@@ -15,7 +15,7 @@ export function ClientListItem({ client }: ClientListItemProps) {
 						<span className="font-medium">{client.company}</span>
 					</div>
 					<span className="text-muted-foreground text-sm">
-						{client.name} • {client.number}
+						{client.name} • {client.phone}
 					</span>
 				</div>
 				<span>{getStatusBadge(client.status)}</span>

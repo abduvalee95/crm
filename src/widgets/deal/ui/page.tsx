@@ -28,7 +28,7 @@ export default function DealsPage() {
 		return recentClients.filter((deal) => {
 			const matchesSearch =
 				deal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				deal.company.toLowerCase().includes(searchTerm.toLowerCase());
+				deal.company?.toLowerCase().includes(searchTerm.toLowerCase());
 			const matchesStage = stageFilter === 'all' || deal.stage === stageFilter;
 			return matchesSearch && matchesStage;
 		});
@@ -43,7 +43,7 @@ export default function DealsPage() {
 		};
 
 		recentClients.forEach((deal) => {
-			columns[deal.stage].push(deal);
+			columns[deal.stage as DealStage].push(deal as unknown as Deal);
 		});
 
 		return columns;
@@ -61,7 +61,7 @@ export default function DealsPage() {
 						{kanbanColumns[stage].map((deal) => (
 							<Card key={deal.company} className="bg-[#1B1E23] border-gray-800 text-white">
 								<CardContent className="p-4">
-									<h3 className="font-semibold">{deal.name}</h3>
+									<h3 className="font-semibold">{deal.company}</h3>
 									<p className="text-sm text-gray-400">{deal.company}</p>
 									{/* <p className="font-bold my-2 text-lg">₽{deal.amount.toLocaleString()}</p> */}
 									<div className="flex items-center text-sm text-gray-400 gap-2 mb-2">
@@ -99,7 +99,7 @@ export default function DealsPage() {
 						className="grid grid-cols-6 items-center gap-4 p-4 border-b border-gray-800 last:border-b-0 hover:bg-gray-800/20"
 					>
 						<div className="col-span-2">
-							<h3 className="font-semibold">{deal.name}</h3>
+							<h3 className="font-semibold">{deal.company}</h3>
 							<p className="text-sm text-gray-400">{deal.company}</p>
 						</div>
 						<div>
@@ -136,19 +136,4 @@ export default function DealsPage() {
 			</CardContent>
 		</Card>
 	);
-
-	// return (
-	//     <div className="p-8 bg-[#0F1115] min-h-screen">
-	//         <DealsHeader activeView={view} onViewChange={setView} dealsCount={filteredDeals.length} />
-	//         <Filters
-	//             searchTerm={searchTerm}
-	//             onSearchChange={setSearchTerm}
-	//             stageFilter={stageFilter}
-	//             onStageFilterChange={setStageFilter}
-	//         />
-
-	//         {/* Dinamik  korinishn o'zgartirish */}
-	//         {view === ViewMode.Kanban ? renderKanbanView() : renderTableView()}
-	//     </div>
-	// );
 }

@@ -21,7 +21,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
 		<div className="flex-1 bg-background min-h-screen p-4 space-y-6">
 			<Header pageType="settings" />
 			{/* Navigation Bar */}
-			<nav className="flex bg-gray-800 rounded-lg justify-around items-center py-3 gap-4">
+			<nav className="flex bg-background rounded-lg justify-around items-center py-3 gap-4">
 				{SETTINGS_NAV_ITEMS.map((item) => {
 					const isActive = pathname === item.href;
 					return (

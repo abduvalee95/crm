@@ -1,5 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { deleteDeal } from '@/shared/store/dealSlice';
+import { useAppDispatch } from '@/shared/store/hooks';
+import { Loader2, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -37,16 +41,47 @@ const FormModal = ({
 	type,
 	data,
 	id,
+	open: controlledOpen,
+	onOpenChange,
 }: {
 	table: 'client' | 'deal' | 'task' | 'employees';
 	type: 'create' | 'update' | 'delete';
 	data?: any;
 	id?: string | number;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 }) => {
-	const [open, setOpen] = useState(false);
+	const [internalOpen, setInternalOpen] = useState(false);
+	const [deleting, setDeleting] = useState(false);
+	const dispatch = useAppDispatch();
+
+	const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+	const setOpen = (value: boolean) => {
+		if (controlledOpen === undefined) {
+			setInternalOpen(value);
+		}
+		onOpenChange?.(value);
+	};
 
 	const handleCancel = () => setOpen(false);
 	const handleSuccess = () => setOpen(false);
+
+	const handleDelete = async () => {
+		if (!id || typeof id !== 'string') return;
+		setDeleting(true);
+		try {
+			if (table === 'deal') {
+				await dispatch(deleteDeal(id)).unwrap();
+			}
+			// Add other tables here if needed
+			handleSuccess();
+		} catch (error: any) {
+			console.error('Delete error:', error);
+			// Error is handled by Redux state
+		} finally {
+			setDeleting(false);
+		}
+	};
 
 	const getModalTitle = () => {
 		if (type === 'delete') return 'Удаление';
@@ -81,11 +116,18 @@ const FormModal = ({
 					</p>
 				</div>
 				<div className="flex gap-3 justify-end">
-					<Button variant="outline" onClick={handleCancel}>
+					<Button variant="outline" onClick={handleCancel} disabled={deleting}>
 						Отмена
 					</Button>
-					<Button variant="destructive" onClick={handleSuccess}>
-						Удалить
+					<Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+						{deleting ? (
+							<>
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+								Удаление...
+							</>
+						) : (
+							'Удалить'
+						)}
 					</Button>
 				</div>
 			</div>
@@ -98,9 +140,11 @@ const FormModal = ({
 
 	return (
 		<>
-			<Button size="sm" onClick={() => setOpen(true)}>
-				{type === 'create' ? 'Создать' : type === 'update' ? 'Изменить' : 'Удалить'}
-			</Button>
+			{controlledOpen === undefined && (
+				<Button size="sm" onClick={() => setOpen(true)}>
+					{type === 'create' ? 'Создать' : type === 'update' ? 'Изменить' : 'Удалить'}
+				</Button>
+			)}
 			{open && (
 				<div
 					className="w-screen h-screen fixed top-0 left-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50"

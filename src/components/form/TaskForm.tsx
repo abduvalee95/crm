@@ -9,20 +9,30 @@ type FormProps = { type: 'create' | 'update'; data?: any; onCancel?: () => void;
 const schema = z.object({
 	title: z.string().min(2, 'Название задачи обязательно'),
 	description: z.string().optional(),
-	assignee: z.string().optional(),
 	status: z.nativeEnum(TaskStatus),
+	dueDate: z.string().optional(), // Backend bilan moslash (deadline o'rniga)
+	assignedToId: z.string().uuid().optional(), // Backend bilan moslash
+	clientId: z.string().uuid().optional(), // Backend bilan moslash
+	dealId: z.string().uuid().optional(), // Backend bilan moslash
+	// Frontend uchun qo'shimcha maydonlar (optional)
+	assignee: z.string().optional(),
 	priority: z.enum(['low', 'medium', 'high']).optional(),
-	deadline: z.string().optional(),
+	deadline: z.string().optional(), // Frontend uchun (dueDate alias)
 });
 
 export default function TaskForm({ type, data, onCancel, onSuccess }: FormProps) {
 	const [form, setForm] = useState({
 		title: data?.title ?? '',
 		description: data?.description ?? '',
+		status: (data?.status as TaskStatus) ?? TaskStatus.PENDING,
+		dueDate: data?.dueDate ?? data?.deadline ?? '', // Backend bilan moslash
+		assignedToId: data?.assignedToId ?? '', // Backend bilan moslash
+		clientId: data?.clientId ?? '', // Backend bilan moslash
+		dealId: data?.dealId ?? '', // Backend bilan moslash
+		// Frontend uchun qo'shimcha maydonlar
 		assignee: data?.assignee ?? '',
-		status: (data?.status as TaskStatus) ?? TaskStatus.Todo,
 		priority: (data?.priority as 'low' | 'medium' | 'high') ?? 'medium',
-		deadline: data?.deadline ?? '',
+		deadline: data?.deadline ?? data?.dueDate ?? '', // Frontend uchun
 	});
 	const [errors, setErrors] = useState<Partial<Record<keyof z.infer<typeof schema>, string>>>({});
 	const [submitting, setSubmitting] = useState(false);
@@ -68,10 +78,10 @@ export default function TaskForm({ type, data, onCancel, onSuccess }: FormProps)
 						className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] md:text-sm"
 						aria-invalid={!!errors.status}
 					>
-						<option value={TaskStatus.Todo}>To do</option>
-						<option value={TaskStatus.InProgress}>In progress</option>
-						<option value={TaskStatus.Blocked}>Blocked</option>
-						<option value={TaskStatus.Done}>Done</option>
+						<option value={TaskStatus.PENDING}>Pending</option>
+						<option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+						<option value={TaskStatus.COMPLETED}>Completed</option>
+						<option value={TaskStatus.CANCELLED}>Cancelled</option>
 					</select>
 					{errors.status && <p className="mt-1 text-xs text-red-500">{errors.status}</p>}
 				</div>

@@ -10,18 +10,18 @@ interface ConversationHeaderProps {
 
 export const ConversationHeader: React.FC<ConversationHeaderProps> = ({ conversation, onCall, onVideoCall }) => {
 	return (
-		<div className="p-4 border-b border-gray-700 bg-gray-800">
+		<div className="p-4 border-b border-gray-700 bg-background">
 			<div className="flex items-center justify-between">
 				{/* User Info */}
 				<div className="flex items-center gap-4 justify-center">
 					<div className="relative w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
-						<span className="text-white text-2xl font-bold">{conversation.title.slice(0, 1).toUpperCase()}</span>
+						<span className="text-card-foreground text-2xl font-bold">{conversation.title.slice(0, 1).toUpperCase()}</span>
 						{/* Online Status */}
 						<div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-gray-800 rounded-full" />
 					</div>
 
 					<div>
-						<h3 className="text-white font-medium text-lg">{conversation.title}</h3>
+						<h3 className="text-card-foreground font-medium text-lg">{conversation.title}</h3>
 						<p className="text-green-400 text-sm flex items-center gap-1">
 							<span className="w-2 h-2 bg-green-400 rounded-full" />В сети
 						</p>

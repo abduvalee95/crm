@@ -2,51 +2,54 @@
 import { Card } from '@/components/ui/card';
 import { employeeStats } from '@/lib/data/emloyers';
 import { Activity } from 'lucide-react';
+import { useAppSelector } from '@/shared/store/hooks';
+import { Role } from '@/lib/enums/status'
 
 const EmployeesStat = () => {
+	const employees = useAppSelector((state) => state.employee.employees);
 	const statCards = [
 		{
 			title: 'Всего сотрудников',
-			value: employeeStats.total,
+			value: employees.length,
 			icon: Activity,
 			color: 'text-blue-400',
-			bgColor: 'bg-black',
+			bgColor: 'bg-background',
 		},
 		{
 			title: 'Активные',
-			value: employeeStats.active,
+			value: employees.filter((employee) => employee.role === Role.ADMIN).length,
 			icon: Activity,
 			color: 'text-green-400',
-			bgColor: 'bg-black',
+			bgColor: 'bg-background',
 		},
 		{
 			title: 'Неактивные',
-			value: employeeStats.inactive,
+			value: employees.filter((employee) => employee.role === Role.SUPPORT).length,
 			icon: Activity,
 			color: 'text-red-400',
-			bgColor: 'bg-black',
+			bgColor: 'bg-background',
 		},
 		{
 			title: 'Менеджеры',
-			value: employeeStats.departments.Продажи,
+			value: employees.filter((employee) => employee.role === Role.MANAGER).length,
 			icon: Activity,
 			color: 'text-blue-400',
-			bgColor: 'bg-black',
+			bgColor: 'bg-background',
 		}
 	];
 
 	return (
 		<div className="flex gap-4 w-full ">
 			{statCards.map((stat, index) => (
-				<Card key={index} className="bg-black border-gray-700 text-white shadow-xl w-full">
+				<Card key={index} className="bg-background border-gray-700 text-foreground shadow-xl w-full">
 					<div className="p-2">
 						<div className="flex items-center">
 							<div className={`p-3 rounded-full ${stat.bgColor}`}>
 								<stat.icon className={`w-6 h-6 ${stat.color}`} />
 							</div>
 							<div>
-								<p className="text-gray-400 text-sm font-medium">{stat.title}</p>
-								<p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
+								<p className="text-muted-foreground text-sm font-medium">{stat.title}</p>
+								<p className="text-2xl font-bold text-card-foreground mt-1">{stat.value}</p>
 							</div>
 						</div>
 					</div>

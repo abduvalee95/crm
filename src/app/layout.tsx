@@ -1,9 +1,10 @@
-import StoreProvider from '@/providers/StoreProvider'
-import { ThemeProvider } from '@/providers/ThemeProvider'
-import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import SidebarContainer from '../widgets/sidebar/ui/SidebarContainer'
-import './globals.css'
+import StoreProvider from '@/providers/StoreProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import { AuthInitializer } from '@/widgets/auth/ui/AuthInitializer';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import SidebarContainer from '../widgets/sidebar/ui/SidebarContainer';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -77,6 +78,7 @@ export default function RootLayout({
 			<body className={`${inter.className} antialiased bg-background text-foreground`}>
 				<StoreProvider>
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+						<AuthInitializer />
 						<a className="skip-to-content" href="#main-content">
 							Перейти к основному содержанию
 						</a>

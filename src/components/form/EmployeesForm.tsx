@@ -1,5 +1,9 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { EmployeeStatus, Role } from '@/lib/enums/status';
+import { createEmployee, updateEmployee } from '@/shared/store/employeeSlice';
+import { useAppDispatch } from '@/shared/store/hooks';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
@@ -8,32 +12,52 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 type FormProps = { type: 'create' | 'update'; data?: any; onCancel?: () => void; onSuccess?: (r?: any) => void };
 
 const schema = z.object({
-	name: z.string().min(2, 'Имя обязательно'),
+	fullName: z.string().min(2, 'Имя обязательно'),
 	position: z.string().min(2, 'Должность обязательна'),
 	email: z.string().email('Неверный email'),
 	phone: z.string().min(7, 'Телефон обязателен'),
 	department: z.string().min(2, 'Отдел обязателен'),
-	role: z.enum(['admin', 'manager', 'analyst', 'support']),
-	status: z.enum(['active', 'inactive', 'on_leave']).optional(),
+	role: z.enum(['admin', 'manager', 'analyst', 'support', 'user']),
+	status: z.enum(['active', 'on_leave']).optional(),
 });
 
+const getRoleLabel = (role: string) => {
+	const labels: Record<string, string> = {
+		admin: 'Админ',
+		manager: 'Менеджер',
+		analyst: 'Аналитик',
+		support: 'Поддержка',
+		user: 'Пользователь',
+	};
+	return labels[role] || role;
+};
+
+const getStatusLabel = (status: string) => {
+	const labels: Record<string, string> = {
+		active: 'Активен',
+		on_leave: 'В отпуске',
+	};
+	return labels[status] || status;
+};
+
 export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormProps) {
+	const dispatch = useAppDispatch();
 	const [form, setForm] = useState({
-		name: data?.name ?? '',
+		fullName: data?.fullName ?? data?.name ?? '',
 		position: data?.position ?? '',
 		email: data?.email ?? '',
 		phone: data?.phone ?? '',
 		department: data?.department ?? '',
-		role: (data?.role as 'admin' | 'manager' | 'analyst' | 'support') ?? 'manager',
-		status: (data?.status as 'active' | 'inactive' | 'on_leave') ?? 'active',
+		role: (data?.role as 'admin' | 'manager' | 'analyst' | 'support' | 'user') ?? 'user',
+		status: (data?.status as 'active' | 'on_leave') ?? 'active',
 	});
-	const [errors, setErrors] = useState<Partial<Record<keyof z.infer<typeof schema>, string>>>({});
+	const [errors, setErrors] = useState<Partial<Record<keyof z.infer<typeof schema> | '_general', string>>>({});
 	const [submitting, setSubmitting] = useState(false);
 
 	const update = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
 		setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
-	const onSubmit = (e: React.FormEvent) => {
+	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setSubmitting(true);
 		setErrors({});
@@ -50,16 +74,59 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 			return;
 		}
 
-		onSuccess?.(parsed.data);
-		setSubmitting(false);
+		try {
+			const cleanData = {
+				fullName: form.fullName.trim(),
+				email: form.email.trim().toLowerCase(),
+				phone: form.phone.trim() || undefined,
+				position: form.position.trim() || undefined,
+				department: form.department.trim() || undefined,
+				role: form.role as Role,
+				status: form.status as EmployeeStatus,
+			};
+
+			if (type === 'create') {
+				const result = await dispatch(createEmployee(cleanData));
+				if (createEmployee.fulfilled.match(result)) {
+					onSuccess?.(result.payload);
+				} else {
+					const errorMessage = (result.payload as string) || 'Ошибка создания сотрудника';
+					setErrors({ _general: errorMessage });
+				}
+			} else {
+				const result = await dispatch(updateEmployee({ id: data?.id || data?._id, ...cleanData }));
+				if (updateEmployee.fulfilled.match(result)) {
+					onSuccess?.(result.payload);
+				} else {
+					const errorMessage = (result.payload as string) || 'Ошибка обновления сотрудника';
+					setErrors({ _general: errorMessage });
+				}
+			}
+		} catch (error: any) {
+			console.error('Error saving employee:', error);
+			const errorMessage = error?.message || error?.toString() || 'Ошибка сохранения сотрудника';
+			setErrors({ _general: errorMessage });
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
+			{errors._general && (
+				<div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+					{errors._general}
+				</div>
+			)}
 			<div className="flex flex-col gap-4">
 				<div>
-					<Input placeholder="Имя" value={form.name} onChange={update('name')} aria-invalid={!!errors.name} />
-					{errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+					<Input
+						placeholder="Имя"
+						value={form.fullName}
+						onChange={update('fullName')}
+						aria-invalid={!!errors.fullName}
+					/>
+					{errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
 				</div>
 				<div>
 					<Input
@@ -95,7 +162,7 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 								className="w-full justify-between bg-background border-border text-card-foreground hover:bg-accent"
 								type="button"
 							>
-								{form.role}
+								{getRoleLabel(form.role)}
 								<ChevronDown className="w-4 h-4 ml-2" />
 							</Button>
 						</DropdownMenuTrigger>
@@ -110,29 +177,28 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'support' }))}>
 								Поддержка
 							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'user' }))}>
+								Пользователь
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 
 				<div>
 					<DropdownMenu>
-						{' '}
-						<DropdownMenuTrigger>
+						<DropdownMenuTrigger asChild>
 							<Button
 								variant="outline"
 								className="w-full justify-between bg-background border-border text-card-foreground hover:bg-accent"
 								type="button"
 							>
-								{form.status}
+								{getStatusLabel(form.status)}
 								<ChevronDown className="w-4 h-4 ml-2" />
-							</Button>{' '}
+							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
 							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'active' }))}>
 								Активен
-							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'inactive' }))}>
-								Неактивен
 							</DropdownMenuItem>
 							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'on_leave' }))}>
 								В отпуске
@@ -143,11 +209,17 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 			</div>
 
 			<div className="flex justify-end gap-3 pt-2">
-				<Button type="button" variant="outline" onClick={() => onCancel?.()}>
+				<Button type="button" variant="outline" onClick={() => onCancel?.()} disabled={submitting}>
 					Отмена
 				</Button>
 				<Button type="submit" disabled={submitting}>
-					{type === 'create' ? 'Добавить' : 'Сохранить'}
+					{submitting
+						? type === 'create'
+							? 'Добавление...'
+							: 'Сохранение...'
+						: type === 'create'
+						? 'Добавить'
+						: 'Сохранить'}
 				</Button>
 			</div>
 		</form>

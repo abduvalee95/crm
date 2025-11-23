@@ -1,10 +1,12 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LeadSource } from '@/shared/store/analyticsSlice'
+import { useAppSelector } from '@/shared/store/hooks';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const CirleStatic = () => {
-	const { leadSources } = require('@/lib/data/mock').analyticsData;
+	const leadSources = useAppSelector((s) => s.analytics.leadSources);
 
 	return (
 		<Card className="bg-background text-card-foreground border-border shadow-xl">
@@ -15,7 +17,7 @@ const CirleStatic = () => {
 				<ResponsiveContainer>
 					<PieChart className="focus:recharts-wrapper focus:recharts-surface outline-none echarts-wrapper *:focus:outline-none">
 						<Pie
-							data={leadSources}
+							data={leadSources.map((source) => ({ name: source.name, value: source.value }))}
 							cx="50%"
 							cy="50%"
 							labelLine={true}
@@ -25,7 +27,7 @@ const CirleStatic = () => {
 							dataKey="value"
 							className="focus:recharts-wrapper focus:recharts-surface outline-none echarts-wrapper *:focus:outline-none"
 						>
-							{leadSources.map((entry: any, index: number) => (
+							{leadSources.map((entry: LeadSource, index: number) => (
 								<Cell key={`cell-${index}`} fill={entry.color} />
 							))}
 						</Pie>
