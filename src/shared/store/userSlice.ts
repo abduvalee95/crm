@@ -55,8 +55,14 @@ export const fetchCurrentUser = createAsyncThunk('user/fetchCurrentUser', async 
 export const updateUser = createAsyncThunk('user/updateUser', async (data: UpdateUserData, { rejectWithValue }) => {
 	try {
 		const response = await userService.updateUser(data);
+
+		// Agar yangi token kelsa, uni saqlash
+		if (response.token) {
+			localStorage.setItem('token', response.token);
+		}
+
 		// Backend'dan user object qaytarsa
-		return response.user || response; // response.user mavjud bo'lsa, aks holda response
+		return response.user;
 	} catch (error: any) {
 		return rejectWithValue(error.message || 'Failed to update user');
 	}

@@ -64,7 +64,7 @@ const DealTableView: React.FC<DealViewProps> = ({ deals }) => {
 										<h3 className="font-semibold text-card-foreground">{deal.title}</h3>
 									</div>
 									<div className="flex items-center gap-4 text-sm text-muted-foreground">
-										<span>{deal.company || deal.clientId}</span>
+										<span>{deal.company ||  deal.clientId}</span>
 										{deal.amount && (
 											<span className="font-medium text-card-foreground">₽{deal.amount.toLocaleString()}</span>
 										)}
@@ -125,15 +125,4 @@ const DealTableView: React.FC<DealViewProps> = ({ deals }) => {
 };
 
 export default DealTableView;
-//* */
-/* 
-<DropdownMenu>
-<DropdownMenuTrigger className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-gray-800/50">
-	<MoreVertical size={16} />
-</DropdownMenuTrigger>
-<DropdownMenuContent className="bg-[#1B1E23] border-gray-700 text-white">
-	<DropdownMenuItem>Открыть</DropdownMenuItem>
-	<DropdownMenuItem>Редактировать</DropdownMenuItem>
-	<DropdownMenuItem>Архивировать</DropdownMenuItem>
-</DropdownMenuContent>
-</DropdownMenu> */
+

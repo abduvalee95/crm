@@ -2,60 +2,59 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { EmployeeStatus, Role } from '@/lib/enums/status';
+import type { Employee } from '@/lib/interface/employee';
+import { CreateEmployeeData } from '@/lib/services/employeeService';
+import { getRoleLabel, getStatusLabel } from '@/lib/utils/employeeHelpers';
 import { createEmployee, updateEmployee } from '@/shared/store/employeeSlice';
 import { useAppDispatch } from '@/shared/store/hooks';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
-type FormProps = { type: 'create' | 'update'; data?: any; onCancel?: () => void; onSuccess?: (r?: any) => void };
+type FormProps = {
+	type: 'create' | 'update';
+	data?: Partial<Employee>;
+	onCancel?: () => void;
+	onSuccess?: (r?: Employee) => void;
+};
 
 const schema = z.object({
 	fullName: z.string().min(2, 'Имя обязательно'),
-	position: z.string().min(2, 'Должность обязательна'),
+	position: z.string().min(2, 'Должность обязательна').optional().or(z.literal('')),
 	email: z.string().email('Неверный email'),
-	phone: z.string().min(7, 'Телефон обязателен'),
-	department: z.string().min(2, 'Отдел обязателен'),
-	role: z.enum(['admin', 'manager', 'analyst', 'support', 'user']),
-	status: z.enum(['active', 'on_leave']).optional(),
+	phone: z
+		.string()
+		.regex(/^[+0-9\-()\s]*$/, 'Неверный формат телефона')
+		.min(7, 'Телефон обязателен')
+		.optional()
+		.or(z.literal('')),
+	department: z.string().min(2, 'Отдел обязателен').optional().or(z.literal('')),
+	role: z.nativeEnum(Role),
+	status: z.nativeEnum(EmployeeStatus).optional(),
 });
-
-const getRoleLabel = (role: string) => {
-	const labels: Record<string, string> = {
-		admin: 'Админ',
-		manager: 'Менеджер',
-		analyst: 'Аналитик',
-		support: 'Поддержка',
-		user: 'Пользователь',
-	};
-	return labels[role] || role;
-};
-
-const getStatusLabel = (status: string) => {
-	const labels: Record<string, string> = {
-		active: 'Активен',
-		on_leave: 'В отпуске',
-	};
-	return labels[status] || status;
-};
 
 export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormProps) {
 	const dispatch = useAppDispatch();
 	const [form, setForm] = useState({
-		fullName: data?.fullName ?? data?.name ?? '',
+		fullName: data?.fullName ?? '',
 		position: data?.position ?? '',
 		email: data?.email ?? '',
 		phone: data?.phone ?? '',
 		department: data?.department ?? '',
-		role: (data?.role as 'admin' | 'manager' | 'analyst' | 'support' | 'user') ?? 'user',
-		status: (data?.status as 'active' | 'on_leave') ?? 'active',
+		role: (data?.role as Role) ?? Role.USER,
+		status: (data?.status as EmployeeStatus) ?? EmployeeStatus.active,
 	});
 	const [errors, setErrors] = useState<Partial<Record<keyof z.infer<typeof schema> | '_general', string>>>({});
 	const [submitting, setSubmitting] = useState(false);
 
-	const update = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+	const update = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		setForm((prev) => ({ ...prev, [key]: e.target.value }));
+		// Error clear qilish
+		if (errors[key as keyof typeof errors]) {
+			setErrors((prev) => ({ ...prev, [key]: undefined }));
+		}
+	};
 
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -75,7 +74,7 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 		}
 
 		try {
-			const cleanData = {
+			const cleanData: CreateEmployeeData = {
 				fullName: form.fullName.trim(),
 				email: form.email.trim().toLowerCase(),
 				phone: form.phone.trim() || undefined,
@@ -94,7 +93,15 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 					setErrors({ _general: errorMessage });
 				}
 			} else {
-				const result = await dispatch(updateEmployee({ id: data?.id || data?._id, ...cleanData }));
+				// ID tekshirish (update uchun)
+				const employeeId = data?.id;
+				if (!employeeId) {
+					setErrors({ _general: 'ID сотрудника не найден' });
+					setSubmitting(false);
+					return;
+				}
+
+				const result = await dispatch(updateEmployee({ id: employeeId, ...cleanData }));
 				if (updateEmployee.fulfilled.match(result)) {
 					onSuccess?.(result.payload);
 				} else {
@@ -167,17 +174,19 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'admin' }))}>Админ</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'manager' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: Role.ADMIN }))}>
+								Админ
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: Role.MANAGER }))}>
 								Менеджер
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'analyst' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: Role.ANALYST }))}>
 								Аналитик
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'support' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: Role.SUPPORT }))}>
 								Поддержка
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: 'user' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, role: Role.USER }))}>
 								Пользователь
 							</DropdownMenuItem>
 						</DropdownMenuContent>
@@ -197,10 +206,10 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-full bg-background border-border text-card-foreground">
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'active' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: EmployeeStatus.active }))}>
 								Активен
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: 'on_leave' }))}>
+							<DropdownMenuItem onClick={() => setForm((prev) => ({ ...prev, status: EmployeeStatus.on_leave }))}>
 								В отпуске
 							</DropdownMenuItem>
 						</DropdownMenuContent>
@@ -213,6 +222,7 @@ export default function EmployeesForm({ type, data, onCancel, onSuccess }: FormP
 					Отмена
 				</Button>
 				<Button type="submit" disabled={submitting}>
+					{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 					{submitting
 						? type === 'create'
 							? 'Добавление...'

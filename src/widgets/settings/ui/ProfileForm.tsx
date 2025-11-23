@@ -1,14 +1,21 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { baseUrl } from '@/lib/config/config';
+import { Role } from '@/lib/enums/status';
 import { userService } from '@/lib/services/userService';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import { fetchCurrentUser, updateUser } from '@/shared/store/userSlice';
 import { Card } from '@/shared/ui/Card';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Briefcase, Globe, Mail, Phone, Save, Upload, User } from 'lucide-react';
+import { Briefcase, ChevronDown, Globe, Mail, Phone, Save, Upload, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 export default function ProfileForm() {
@@ -17,13 +24,13 @@ export default function ProfileForm() {
 	const isLoadingRedux = useAppSelector((state) => state.user.isLoading);
 
 	const [formData, setFormData] = useState({
-		firstName: currentUser?.fullName?.split(' ')[0],
-		lastName: currentUser?.fullName?.split(' ').slice(1).join(' '),
-		email: currentUser?.email,
-		phone: currentUser?.phone,
-		position: currentUser?.position,
-		language: currentUser?.role?.toString(),
-		avatar: currentUser?.avatar,
+		firstName: currentUser?.fullName?.split(' ')[0] || '',
+		lastName: currentUser?.fullName?.split(' ').slice(1).join(' ') || '',
+		email: currentUser?.email || '',
+		phone: currentUser?.phone || '',
+		position: currentUser?.position || '',
+		language: currentUser?.role?.toString() || '',
+		avatar: currentUser?.avatar || '',
 		currentPassword: '',
 		newPassword: '',
 		confirmPassword: '',
@@ -131,6 +138,7 @@ export default function ProfileForm() {
 			if (updateUser.fulfilled.match(result)) {
 				console.log('Profile updated successfully');
 				// Parol maydonlarini tozalash
+				await dispatch(fetchCurrentUser());
 				setFormData((prev) => ({
 					...prev,
 					currentPassword: '',
@@ -338,12 +346,28 @@ export default function ProfileForm() {
 								<Briefcase className="w-4 h-4" />
 								Должность
 							</label>
-							<Input
-								value={formData.position}
-								onChange={(e) => handleInputChange('position', e.target.value)}
-								className="bg-background border-gray-600 text-card-foreground placeholder:text-gray-400"
-								placeholder="Введите должность"
-							/>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button
+										variant="outline"
+										className="w-full justify-between bg-background border-gray-600 text-card-foreground hover:bg-gray-700"
+									>
+										{formData.position || 'Выберите должность'}
+										<ChevronDown className="w-4 h-4 opacity-50" />
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent className="w-full min-w-[200px] bg-background border-gray-600 text-card-foreground">
+									{Object.values(Role).map((pos) => (
+										<DropdownMenuItem
+											key={pos}
+											onClick={() => handleInputChange('position', pos)}
+											className="hover:bg-gray-700 cursor-pointer"
+										>
+											{pos}
+										</DropdownMenuItem>
+									))}
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</div>
 
 						<div className="space-y-2">

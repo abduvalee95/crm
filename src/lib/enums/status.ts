@@ -16,23 +16,23 @@ export enum TaskStatus {
 }
 
 export enum OnlineStatus {
-  ONLINE = 'online',
-  OFFLINE = 'offline',
-  AWAY = 'away',
-  BUSY = 'busy'
+	ONLINE = 'online',
+	OFFLINE = 'offline',
+	AWAY = 'away',
+	BUSY = 'busy',
 }
 
-export enum Role{
-  ADMIN = 'admin',
-  MANAGER = 'manager',
-  ANALYST = 'analyst',
-  SUPPORT = 'support',
-  USER = 'user'
+export enum Role {
+	ADMIN = 'Админ',
+	MANAGER = 'Менеджер',
+	ANALYST = 'Аналитик',
+	SUPPORT = 'Поддержка',
+	USER = 'Пользователь',
 }
 
-export enum Performance{
-  EXCELLENT = 'excellent',
-  GOOD = 'good',
-  AVERAGE = 'average',
-  NEEDS_IMPROVEMENT = 'needs_improvement'
+export enum Performance {
+	EXCELLENT = 'excellent',
+	GOOD = 'good',
+	AVERAGE = 'average',
+	NEEDS_IMPROVEMENT = 'needs_improvement',
 }
