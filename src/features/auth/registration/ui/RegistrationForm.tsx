@@ -11,13 +11,15 @@ import { Input } from '@/components/ui/input';
 import { RegistrationData } from '@/lib/api/client';
 import { Role } from '@/lib/enums/status';
 import { userService, type ApiError } from '@/lib/services/userService';
+import { useAppDispatch } from '@/shared/store/hooks';
+import { fetchCurrentUser } from '@/shared/store/userSlice';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 
 type RegistrationFormProps = {
 	onCancel?: () => void;
-	onSuccess?: (result?: any) => void;
+	onSuccess?: (result?: unknown) => void;
 };
 
 const schema = z
@@ -47,6 +49,7 @@ export default function RegistrationForm({ onCancel, onSuccess }: RegistrationFo
 		position: '',
 		phone: '',
 	});
+	const dispatch = useAppDispatch();
 	const [errors, setErrors] = useState<Partial<Record<keyof z.infer<typeof schema>, string>>>({});
 	const [submitting, setSubmitting] = useState(false);
 	const [apiError, setApiError] = useState<string>('');
@@ -91,16 +94,14 @@ export default function RegistrationForm({ onCancel, onSuccess }: RegistrationFo
 				cleanData.position = registrationData.position.trim();
 			}
 
-			console.log('Отправка данных регистрации:', { ...cleanData, password: '***' });
-
 			const response = await userService.register(cleanData);
-
-			console.log('Ответ от сервера:', response);
 
 			// Check if response has token (handle both RegistrationResponse and SignupResponse formats)
 			if (response.token) {
 				localStorage.setItem('token', response.token);
 			}
+
+			dispatch(fetchCurrentUser());
 
 			onSuccess?.(response);
 		} catch (error) {
@@ -135,10 +136,11 @@ export default function RegistrationForm({ onCancel, onSuccess }: RegistrationFo
 	};
 
 	const roleLabels: Record<string, string> = {
-		admin: 'Администратор',
-		manager: 'Менеджер',
-		analyst: 'Аналитик',
-		support: 'Поддержка',
+		[Role.ADMIN]: 'Администратор',
+		[Role.MANAGER]: 'Менеджер',
+		[Role.ANALYST]: 'Аналитик',
+		[Role.SUPPORT]: 'Поддержка',
+		[Role.USER]: 'Пользователь',
 	};
 
 	return (

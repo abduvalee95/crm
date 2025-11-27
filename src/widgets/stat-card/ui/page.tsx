@@ -14,7 +14,7 @@ const StatCard = ({ title, value, change, icon }: StatCardData) => {
 			</CardHeader>
 			<CardContent>
 				<div className="text-3xl font-bold text-card-foreground">{value || '0'}</div>
-				{change && <p className="text-xs mt-1 text-muted-foreground">{change}</p>}
+				<p className="text-xs mt-1 text-muted-foreground">{change}</p>
 			</CardContent>
 		</Card>
 	);

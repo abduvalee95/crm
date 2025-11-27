@@ -11,7 +11,7 @@ import { z } from 'zod';
 
 type LoginFormProps = {
 	onCancel?: () => void;
-	onSuccess?: (result?: any) => void;
+	onSuccess?: (result?: unknown) => void;
 };
 
 const schema = z.object({
@@ -52,12 +52,9 @@ export default function LoginForm({ onCancel, onSuccess }: LoginFormProps) {
 		}
 
 		try {
-			console.log('Отправка данных входа:', { email: form.email, password: '***' });
-
 			const result = await dispatch(loginUser(form));
 
 			if (loginUser.fulfilled.match(result)) {
-				console.log('Вход выполнен успешно');
 				onSuccess?.(result.payload);
 			} else {
 				// Ошибка из Redux

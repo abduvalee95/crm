@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { baseUrl } from '@/lib/config/config';
 import { Role } from '@/lib/enums/status';
+import { UpdateUserData } from '@/lib/interface/user';
 import { userService } from '@/lib/services/userService';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import { fetchCurrentUser, updateUser } from '@/shared/store/userSlice';
@@ -119,7 +120,7 @@ export default function ProfileForm() {
 			const fullName = [firstName, lastName].filter(Boolean).join(' ');
 
 			// Update data object
-			const updateData: any = {
+			const updateData: UpdateUserData = {
 				fullName: fullName || '',
 				email: formData.email?.trim() || '',
 				phone: formData.phone?.trim() || '',
@@ -136,7 +137,6 @@ export default function ProfileForm() {
 			const result = await dispatch(updateUser(updateData));
 
 			if (updateUser.fulfilled.match(result)) {
-				console.log('Profile updated successfully');
 				// Parol maydonlarini tozalash
 				await dispatch(fetchCurrentUser());
 				setFormData((prev) => ({
@@ -148,8 +148,6 @@ export default function ProfileForm() {
 
 				alert('Профиль успешно обновлен');
 			} else {
-				console.error('Failed to update profile:', result.payload);
-
 				alert(`Ошибка: ${result.payload || 'Не удалось обновить профиль'}`);
 			}
 		} catch (error: any) {
@@ -166,14 +164,12 @@ export default function ProfileForm() {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		console.log('File:', file);
 		// File validation
 		const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
 		if (!allowedTypes.includes(file.type)) {
 			alert('Invalid file type. Only JPEG, PNG, JPG, GIF, and WEBP are allowed.');
 			return;
 		}
-		console.log('File size:', file.size);
 		// File size validation (5MB)
 		const maxSize = 5 * 1024 * 1024; // 5MB
 		if (file.size > maxSize) {
@@ -185,11 +181,9 @@ export default function ProfileForm() {
 
 		try {
 			// Upload to backend
-			console.log('Uploading avatar to backend:>>>>>>>>');
 			const avatarPath = await userService.uploadAvatar(file);
 
 			let avatarUrl = avatarPath;
-			console.log('Avatar Path:>>>>>>>>', avatarPath);
 
 			// URL ni formatlash
 			if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
@@ -208,7 +202,6 @@ export default function ProfileForm() {
 				}
 			}
 
-			console.log('Avatar URL:>>>>>>>>', avatarUrl);
 			setAvatar(avatarUrl);
 
 			// Update user in Redux store to get latest user data
@@ -262,7 +255,7 @@ export default function ProfileForm() {
 			{/* Avatar Section */}
 			<div className="flex items-center gap-6 p-6  rounded-lg border border-gray-600">
 				<Avatar className="w-24 h-24 border-2 border-gray-600 overflow-hidden rounded-full">
-					<AvatarImage src={avatar} className="rounded-full  object-cover w-full h-full" />
+					<AvatarImage src={avatar || undefined} className="rounded-full  object-cover w-full h-full" />
 					<AvatarFallback className="text-center text-card-foreground text-[1.5rem] font-bold bg-muted">
 						{currentUser?.fullName?.split(' ')[0]?.[0] || ''}
 					</AvatarFallback>

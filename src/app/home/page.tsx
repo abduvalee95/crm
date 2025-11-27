@@ -28,8 +28,8 @@ export default function HomePage() {
 		const activeDeals = deals.filter((deal) => deal.stage !== DealStage.Closed).length;
 		const closedDeals = deals.filter((deal) => deal.stage === DealStage.Closed).length;
 		const totalRevenue = deals
-			.filter((deal) => deal.stage === DealStage.Closed && deal.amount)
-			.reduce((sum, deal) => sum + (deal.amount || 0), 0);
+			.filter((deal) => deal.stage === DealStage.Closed)
+			.reduce((sum, deal) => sum + (Number(deal.amount) || 0), 0);
 
 		// Calculate changes (mock for now, can be improved with date comparison)
 		const clientsChange = totalClients > 0 ? `Всего: ${totalClients}` : 'Нет данных';

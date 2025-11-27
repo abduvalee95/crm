@@ -6,7 +6,7 @@ export type StatCardData = {
 	title: string;
 	value: string;
 	change: string;
-	icon: any;
+	icon: string;
 };
 
 export type Event = {

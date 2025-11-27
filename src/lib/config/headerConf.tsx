@@ -1,10 +1,6 @@
-import { ArrowDownToLine, Bell, ChevronDown, LayoutGrid, List, Plus } from 'lucide-react';
-import { downloadCSV } from '../cvsDownloader';
-import { analyticsData } from '../data/mock';
+import { Bell, ChevronDown, LayoutGrid, List, Plus } from 'lucide-react';
 import { ViewMode } from '../enums/deal';
 import { PageConfig } from '../interface/header';
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 // Конфигурации для разных страниц
 const pageConfigs: Record<string, PageConfig> = {
@@ -49,7 +45,7 @@ const pageConfigs: Record<string, PageConfig> = {
 				type: 'button',
 				label: 'Добавить сделку',
 				icon: <Plus />,
-				onClick: () => alert("Yangi kelishuv qo'shish formasi ochildi!"),
+				onClick: () => alert('aded '),
 				className: 'bg-foreground text-black flex items-center gap-2 border p-2 rounded-lg border-gray-700',
 			},
 		],

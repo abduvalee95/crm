@@ -23,11 +23,11 @@ export enum OnlineStatus {
 }
 
 export enum Role {
-	ADMIN = 'Админ',
-	MANAGER = 'Менеджер',
-	ANALYST = 'Аналитик',
-	SUPPORT = 'Поддержка',
-	USER = 'Пользователь',
+	ADMIN = 'admin',
+	MANAGER = 'manager',
+	ANALYST = 'analyst',
+	SUPPORT = 'support',
+	USER = 'user',
 }
 
 export enum Performance {

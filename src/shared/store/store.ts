@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import analyticsReducer from './analyticsSlice';
+import chatReducer from './chatSlice';
 import clientReducer from './clientSlice';
 import dealReducer from './dealSlice';
 import employeeReducer from './employeeSlice';
@@ -14,6 +15,7 @@ export const store = configureStore({
 		employee: employeeReducer,
 		client: clientReducer,
 		deal: dealReducer,
+		chat: chatReducer,
 	},
 	devTools: process.env.NODE_ENV !== 'production',
 });

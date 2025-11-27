@@ -1,10 +1,6 @@
 'use client';
 import { useAppSelector } from '@/shared/store/hooks';
-import CirleStatic from '@/widgets/analytics/ui/CirleStatic';
-import Conversion from '@/widgets/analytics/ui/Conversion';
-import EffectiveMeneger from '@/widgets/analytics/ui/EffectiveMeneger';
-import RevenueDash from '@/widgets/analytics/ui/RevenueDash';
-import RevenueTable from '@/widgets/analytics/ui/RevenueTable';
+import AnalyticsBlock from '@/widgets/analytics/page';
 import Header from '@/widgets/header/ui/Header';
 import StatCard from '@/widgets/stat-card/ui/page';
 import { useMemo } from 'react';
@@ -32,7 +28,7 @@ export default function AnalyticsPage() {
 		const totalProfitK = revenueDataFiltered.reduce((sum, p) => sum + p.profit, 0);
 		const conversionPct = Math.round((totalProfitK / Math.max(totalRevenueK, 1)) * 100);
 		return {
-			revenueDisplay: `₽${(totalRevenueK * 1000).toLocaleString()}`,
+			revenueDisplay: `₽${(totalRevenueK * 10).toLocaleString()}`,
 			conversionDisplay: `${conversionPct}%`,
 		};
 	}, [revenueDataFiltered]);
@@ -47,28 +43,7 @@ export default function AnalyticsPage() {
 				<StatCard title="Новые клиенты" value={monthlyMetrics.newClients.toString()} change="" icon={'/tasks.png'} />
 				<StatCard title="Конверсия" value={totals.conversionDisplay} change="" icon={'/dollor.png'} />
 			</div>
-
-			<div className="min-h-screen p-4">
-				<div className="max-w-8xl mx-auto">
-					<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-						<div className="lg:col-span-2">
-							<RevenueDash data={revenueDataFiltered} />
-						</div>
-						<div className="lg:col-span-2">
-							<CirleStatic />
-						</div>
-						<div className="lg:col-span-2">
-							<Conversion data={revenueDataFiltered} />
-						</div>
-						<div className="lg:col-span-2">
-							<EffectiveMeneger />
-						</div>
-						<div className="lg:col-span-2 xl:col-span-4">
-							<RevenueTable />
-						</div>
-					</div>
-				</div>
-			</div>
+			<AnalyticsBlock />
 		</div>
 	);
 }

@@ -63,9 +63,9 @@ export default function DealPage() {
 			) : (
 				<>
 					{activeView === ViewMode.Kanban ? (
-						<DealKanbanView deals={filteredDeals as any} />
+						<DealKanbanView deals={filteredDeals} />
 					) : (
-						<DealTableView deals={filteredDeals as any} />
+						<DealTableView deals={filteredDeals} />
 					)}
 				</>
 			)}

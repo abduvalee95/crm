@@ -13,7 +13,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
 	const router = useRouter();
 	const [success, setSuccess] = useState(false);
 
-	const handleSuccess = async (result?: any) => {
+	const handleSuccess = async (result?: unknown) => {
 		setSuccess(true);
 		setTimeout(() => {
 			router.push('/');
