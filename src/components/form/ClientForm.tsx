@@ -102,14 +102,22 @@ export default function ClientForm({ type, data, onCancel, onSuccess }: ClientFo
 				status: formData.status || ClientStatus.new,
 			};
 
-			// Backend'ga request yuborish - client database'ga qo'shiladi
-			const createdClient = await clientService.createClient(cleanData);
-			console.log('Client created successfully and saved to database:', createdClient);
+			let result;
+			if (type === 'create') {
+				result = await clientService.createClient(cleanData);
+				console.log('Client created successfully:', result);
+			} else if (type === 'update' && data?.id) {
+				result = await clientService.updateClient(data?.id, cleanData);
+				console.log('Client updated successfully:', result);
+			} else {
+				throw new Error('Invalid form type or missing client email');
+			}
 
-			onSuccess?.(createdClient);
+			onSuccess?.(result);
 		} catch (error: any) {
-			console.error('Error creating client:', error);
-			const errorMessage = error?.message || error?.toString() || 'Ошибка создания клиента';
+			console.error(`Error ${type === 'create' ? 'creating' : 'updating'} client:`, error);
+			const errorMessage =
+				error?.message || error?.toString() || `Ошибка ${type === 'create' ? 'создания' : 'обновления'} клиента`;
 			setErrors({ _general: errorMessage } as any);
 		} finally {
 			setSubmitting(false);

@@ -8,7 +8,18 @@ export class SocketClient {
 	}
 
 	connect() {
+		if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
+			console.log('WebSocket already connected or connecting');
+			return;
+		}
+
 		const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+		if (!token) {
+			console.warn('WebSocket: No token found, skipping connection');
+			return;
+		}
+
 		this.socket = new WebSocket(`${this.url}?token=${token}`);
 
 		this.socket.onopen = () => {

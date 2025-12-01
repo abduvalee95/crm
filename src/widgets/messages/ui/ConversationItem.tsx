@@ -30,8 +30,8 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({ conversation
 				{/* Avatar with Online Status */}
 				<div className="relative">
 					<Avatar className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
-						<AvatarImage src={conversation.avatar} className="w-full h-full object-cover" />
-						<AvatarFallback className="w-full h-full flex items-center justify-center text-white font-bold bg-gradient-to-br from-blue-500 to-indigo-600">
+						<AvatarImage src={conversation.avatar} className="w-12 h-12 object-cover rounded-full" />
+						<AvatarFallback className="w-12 h-12 flex items-center justify-center text-white font-bold bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full">
 							{conversation.title.slice(0, 1).toUpperCase()}
 						</AvatarFallback>
 					</Avatar>

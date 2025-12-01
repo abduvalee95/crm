@@ -1,6 +1,6 @@
-export const baseUrl=  'http://localhost:3000';
+export const baseUrl = 'http://localhost:3000';
 
-export	const formatAvatarUrl = (avatarPath: string | undefined | null): string => {
+export const formatAvatarUrl = (avatarPath: string | undefined | null): string => {
 	if (!avatarPath) return '';
 
 	// Agar allaqachon to'liq URL bo'lsa

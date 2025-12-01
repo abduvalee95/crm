@@ -20,3 +20,5 @@ export interface CreateClientData {
 	notes?: string;
 	status?: ClientStatus;
 }
+
+export interface UpdateClientData extends Partial<CreateClientData> {}

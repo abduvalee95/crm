@@ -7,7 +7,7 @@ type Point = { name: string; revenue: number; profit: number };
 const RevenueDash = ({ data }: { data: Point[] }) => (
 	<Card className="bg-background text-card-foreground border-border shadow-xl">
 		<CardHeader>
-			<CardTitle className="text-xl font-semibold">Доходы по месяцам</CardTitle>
+			<CardTitle className="text-xl font-semibold">Доходы</CardTitle>
 		</CardHeader>
 		<CardContent className="h-[330px]">
 			<ResponsiveContainer>

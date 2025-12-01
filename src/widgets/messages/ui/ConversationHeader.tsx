@@ -1,3 +1,4 @@
+import { formatAvatarUrl } from '@/lib/config/config';
 import { Conversation } from '@/lib/interface/message';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { MoreVertical, Phone, Video } from 'lucide-react';
@@ -11,13 +12,13 @@ interface ConversationHeaderProps {
 
 export const ConversationHeader: React.FC<ConversationHeaderProps> = ({ conversation, onCall, onVideoCall }) => {
 	return (
-		<div className="px-6 py-4 border-b border-gray-700 bg-background flex items-center justify-between sticky top-0 z-10 shadow-sm">
+		<div className="px-6 py-4 border-b border-border/50 bg-card/30 flex items-center justify-between sticky top-0 z-10 shadow-sm">
 			{/* User Info */}
 			<div className="flex items-center gap-4">
 				<div className="relative">
-					<Avatar className="w-10 h-10 rounded-full overflow-hidden bg-gray-700 border border-gray-600">
-						<AvatarImage src={conversation.avatar} className="w-full h-full object-cover" />
-						<AvatarFallback className="w-full h-full flex items-center justify-center text-white font-bold text-sm bg-blue-600">
+					<Avatar className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 ">
+						<AvatarImage src={formatAvatarUrl(conversation.avatar)} className="w-10 h-10 object-cover rounded-full" />
+						<AvatarFallback className="w-10 h-10 flex items-center justify-center text-white font-bold text-sm bg-blue-600">
 							{conversation.title.slice(0, 2).toUpperCase()}
 						</AvatarFallback>
 					</Avatar>

@@ -1,4 +1,4 @@
-import { apiClient } from '../api/client';
+import { apiClient } from '../api/client'
 
 export interface TelegramSettingsResponse {
 	enabled: boolean;
@@ -30,5 +30,17 @@ export const integrationService = {
 	testTelegramSettings: async (payload: TelegramTestPayload) => {
 		return apiClient.post<{ message: string }>('/integrations/telegram/test', payload);
 	},
-};
 
+	// WhatsApp endpoints
+	getWhatsappQr: async () => {
+		return apiClient.get<{ qrCode: string; status: string }>('/whatsapp/qr');
+	},
+
+	getWhatsappStatus: async () => {
+		return apiClient.get<{ isReady: boolean }>('/whatsapp/status');
+	},
+
+	sendWhatsappMessage: async (to: string, message: string) => {
+		return apiClient.post('/whatsapp/send', { to, message });
+	},
+};

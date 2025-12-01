@@ -1,9 +1,11 @@
 'use client';
 import { SearchInput } from '@/features/search/SearchMessage';
+import { formatAvatarUrl } from '@/lib/config/config';
 import { Conversation } from '@/lib/interface/message';
 import { addConversation, setActiveConversation } from '@/shared/store/chatSlice';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
 import { Edit, Users } from 'lucide-react';
+import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import { ConversationItem } from './ConversationItem';
 
@@ -13,7 +15,7 @@ interface MainMessagesPanelProps {
 
 export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConversation }) => {
 	const dispatch = useAppDispatch();
-	const { conversations, activeConversationId } = useAppSelector((state) => state.chat);
+	const { conversations, activeConversationId, onlineUsers } = useAppSelector((state) => state.chat);
 	const employees = useAppSelector((state) => state.employee.employees);
 	const currentUser = useAppSelector((state) => state.user.user);
 	const [searchQuery, setSearchQuery] = useState('');
@@ -73,16 +75,18 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConve
 	};
 
 	return (
-		<div className="border-r border-gray-700 flex flex-col h-full w-full bg-background/50">
+		<div className="flex flex-col h-full w-full bg-transparent">
 			{/* Header */}
-			<div className="p-4 border-b border-gray-700 space-y-4">
+			<div className="p-4 border-b border-border/50 space-y-4 bg-card/30">
 				<div className="flex items-center justify-between">
-					<h2 className="text-xl font-bold text-card-foreground">Сообщения</h2>
+					<h2 className="text-xl font-bold text-foreground">Сообщения</h2>
 					<div className="flex items-center gap-2">
 						<button
 							onClick={() => setShowEmployees(!showEmployees)}
-							className={`p-2 rounded-full transition-colors ${
-								showEmployees ? 'bg-blue-600 text-white' : 'hover:bg-gray-700/50 text-gray-400 hover:text-blue-500'
+							className={`p-2 rounded-full transition-all duration-200 ${
+								showEmployees
+									? 'bg-primary text-primary-foreground shadow-md'
+									: 'hover:bg-muted text-muted-foreground hover:text-foreground'
 							}`}
 							title="Сотрудники"
 						>
@@ -90,7 +94,7 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConve
 						</button>
 						<button
 							onClick={onNewConversation}
-							className="p-2 hover:bg-gray-700/50 rounded-full text-blue-500 transition-colors"
+							className="p-2 hover:bg-muted rounded-full text-primary transition-colors"
 							title="Новый чат"
 						>
 							<Edit className="w-5 h-5" />
@@ -122,29 +126,38 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConve
 							const existingConv = conversations.find(
 								(conv) => conv.participants.includes(employee.id) && conv.participants.includes(currentUser?.id || ''),
 							);
+							const isOnline = onlineUsers.includes(employee.id);
 
 							return (
 								<div
 									key={employee.id}
 									onClick={() => handleEmployeeSelect(employee.id)}
-									className={`p-3 cursor-pointer transition-all duration-200 rounded-xl group ${
+									className={`p-3 cursor-pointer transition-all duration-200 rounded-xl group border ${
 										existingConv?.id === activeConversationId
-											? 'bg-blue-600/10 border border-blue-600/20'
-											: 'hover:bg-gray-800/50 border border-transparent'
+											? 'bg-primary/10 border-primary/20 shadow-sm'
+											: 'hover:bg-muted/50 border-transparent'
 									}`}
 								>
 									<div className="flex items-center gap-3">
 										<div className="relative">
-											<div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0 flex items-center justify-center">
+											<div className="relative w-12 h-12 rounded-full overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center border border-border">
 												{employee.avatar ? (
-													<img src={employee.avatar} alt={employee.fullName} className="w-full h-full object-cover" />
+													<Image
+														src={formatAvatarUrl(employee.avatar)}
+														alt={employee.fullName}
+														className="object-cover"
+														fill
+														sizes="48px"
+													/>
 												) : (
-													<span className="text-white font-bold text-sm">
+													<span className="text-muted-foreground font-bold text-sm">
 														{employee.fullName.slice(0, 1).toUpperCase()}
 													</span>
 												)}
 											</div>
-											<div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full" />
+											{isOnline && (
+												<div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
+											)}
 										</div>
 
 										<div className="flex-1 min-w-0">
@@ -152,14 +165,14 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConve
 												<h3
 													className={`font-semibold text-sm truncate ${
 														existingConv?.id === activeConversationId
-															? 'text-blue-400'
-															: 'text-card-foreground group-hover:text-blue-400 transition-colors'
+															? 'text-primary'
+															: 'text-foreground group-hover:text-primary transition-colors'
 													}`}
 												>
 													{employee.fullName}
 												</h3>
 											</div>
-											<p className="text-xs text-gray-400 truncate">{employee.position || employee.email}</p>
+											<p className="text-xs text-muted-foreground truncate">{employee.position || employee.email}</p>
 										</div>
 									</div>
 								</div>
@@ -168,7 +181,10 @@ export const MainMessagesPanel: React.FC<MainMessagesPanelProps> = ({ onNewConve
 					)
 				) : // Conversations List
 				filteredConversations.length === 0 ? (
-					<div className="text-center py-8 text-gray-500 text-sm">
+					<div className="text-center py-8 text-muted-foreground text-sm flex flex-col items-center gap-2">
+						<div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-2">
+							<Users className="w-6 h-6 text-muted-foreground" />
+						</div>
 						{searchQuery ? 'Ничего не найдено' : 'Нет чатов'}
 					</div>
 				) : (

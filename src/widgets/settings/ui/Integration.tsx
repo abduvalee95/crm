@@ -2,12 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { useEffect, useMemo, useState } from 'react';
 import type { ApiError } from '@/lib/api/client';
-import {
-	integrationService,
-	type TelegramSettingsResponse,
-} from '@/lib/services/integrationService';
+import { integrationService, type TelegramSettingsResponse } from '@/lib/services/integrationService';
+import { useEffect, useMemo, useState } from 'react';
 
 const Integration = () => {
 	// Telegram state
@@ -18,16 +15,18 @@ const Integration = () => {
 	const [telegramLoading, setTelegramLoading] = useState<boolean>(true);
 	const [telegramSaving, setTelegramSaving] = useState<boolean>(false);
 	const [telegramTesting, setTelegramTesting] = useState<boolean>(false);
-	const [telegramMeta, setTelegramMeta] = useState<
-		Pick<TelegramSettingsResponse, 'source' | 'updatedAt'> | null
-	>(null);
-	const [telegramStatus, setTelegramStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(
-		null,
-	);
+	const [telegramMeta, setTelegramMeta] = useState<Pick<TelegramSettingsResponse, 'source' | 'updatedAt'> | null>(null);
+	const [telegramStatus, setTelegramStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
 	const [whatsAppEnabled, setWhatsAppEnabled] = useState<boolean>(false);
-	const [whatsAppApiKey, setWhatsAppApiKey] = useState<string>('');
-	const [whatsAppPhone, setWhatsAppPhone] = useState<string>('');
+	const [whatsAppQr, setWhatsAppQr] = useState<string>('');
+	const [whatsAppStatus, setWhatsAppStatus] = useState<'CONNECTED' | 'WAITING_FOR_SCAN' | 'DISCONNECTED'>(
+		'DISCONNECTED',
+	);
+	const [whatsAppLoading, setWhatsAppLoading] = useState<boolean>(false);
+	const [testWhatsAppPhone, setTestWhatsAppPhone] = useState<string>('');
+	const [testWhatsAppMessage, setTestWhatsAppMessage] = useState<string>('Test message from CRM');
+	const [testWhatsAppSending, setTestWhatsAppSending] = useState<boolean>(false);
 
 	// Email
 	const [smtpServer, setSmtpServer] = useState<string>('');
@@ -119,6 +118,55 @@ const Integration = () => {
 		return `Сохранено: ${telegramMaskedToken}`;
 	}, [telegramBotToken, telegramMaskedToken]);
 
+	const fetchWhatsappStatus = async () => {
+		setWhatsAppLoading(true);
+		try {
+			const statusData = await integrationService.getWhatsappStatus();
+			if (statusData.isReady) {
+				setWhatsAppStatus('CONNECTED');
+				setWhatsAppQr('');
+			} else {
+				const qrData = await integrationService.getWhatsappQr();
+				setWhatsAppQr(qrData.qrCode);
+				setWhatsAppStatus(qrData.status as any);
+			}
+		} catch (error) {
+			console.error('WhatsApp status fetch error:', error);
+		} finally {
+			setWhatsAppLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		if (whatsAppEnabled) {
+			fetchWhatsappStatus();
+			// Polling for status update every 5 seconds if waiting for scan
+			const interval = setInterval(() => {
+				if (whatsAppStatus === 'WAITING_FOR_SCAN') {
+					fetchWhatsappStatus();
+				}
+			}, 5000);
+			return () => clearInterval(interval);
+		}
+	}, [whatsAppEnabled, whatsAppStatus]);
+
+	const handleTestWhatsApp = async () => {
+		if (!testWhatsAppPhone) {
+			alert('Введите номер телефона');
+			return;
+		}
+		setTestWhatsAppSending(true);
+		try {
+			await integrationService.sendWhatsappMessage(testWhatsAppPhone, testWhatsAppMessage);
+			alert('Сообщение успешно отправлено');
+		} catch (error) {
+			console.error('Error sending WhatsApp message:', error);
+			alert('Ошибка отправки сообщения');
+		} finally {
+			setTestWhatsAppSending(false);
+		}
+	};
+
 	const handleSaveEmail = () => {
 		console.log('Save Email', {
 			smtpServer,
@@ -185,10 +233,7 @@ const Integration = () => {
 						</div>
 						<div className="flex flex-col gap-2 text-xs text-muted-foreground">
 							{telegramMeta?.updatedAt && (
-								<span>
-									Последнее обновление:{' '}
-									{new Date(telegramMeta.updatedAt).toLocaleString()}
-								</span>
+								<span>Последнее обновление: {new Date(telegramMeta.updatedAt).toLocaleString()}</span>
 							)}
 							{telegramMeta?.source && (
 								<span>
@@ -196,17 +241,15 @@ const Integration = () => {
 									{telegramMeta.source === 'database'
 										? 'CRM база данных'
 										: telegramMeta.source === 'env'
-											? '.env'
-											: 'не настроено'}
+										? '.env'
+										: 'не настроено'}
 								</span>
 							)}
 						</div>
 						{telegramStatus && (
 							<div
 								className={`rounded-md px-3 py-2 text-sm ${
-									telegramStatus.type === 'success'
-										? 'bg-emerald-50 text-emerald-700'
-										: 'bg-red-50 text-red-700'
+									telegramStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
 								}`}
 								role="status"
 								aria-live="polite"
@@ -220,27 +263,79 @@ const Integration = () => {
 					<div className="space-y-3 pt-4 border-t border-border">
 						<div className="flex items-center justify-between">
 							<div>
-								<p className="font-medium">WhatsApp Business</p>
-								<p className="text-sm text-muted-foreground">Коммуникации с клиентами</p>
+								<p className="font-medium">WhatsApp Web Integration</p>
+								<p className="text-sm text-muted-foreground">Сканируйте QR-код для подключения</p>
 							</div>
 							<Switch checked={whatsAppEnabled} onCheckedChange={setWhatsAppEnabled} aria-label="WhatsApp enable" />
 						</div>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<Input placeholder="API key" value={whatsAppApiKey} onChange={(e) => setWhatsAppApiKey(e.target.value)} />
-							<Input
-								placeholder="Business phone"
-								value={whatsAppPhone}
-								onChange={(e) => setWhatsAppPhone(e.target.value)}
-							/>
-						</div>
+
+						{whatsAppEnabled && (
+							<div className="flex flex-col items-center gap-4 p-4 border border-gray-700 rounded-lg bg-gray-800/50">
+								{whatsAppLoading && !whatsAppQr ? (
+									<div className="text-sm text-gray-400">Загрузка...</div>
+								) : whatsAppStatus === 'CONNECTED' ? (
+									<div className="flex flex-col items-center gap-2 text-green-500">
+										<svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+										</svg>
+										<span className="font-medium">WhatsApp подключен</span>
+										<Button variant="outline" size="sm" onClick={fetchWhatsappStatus} className="mt-2">
+											Обновить статус
+										</Button>
+									</div>
+								) : (
+									<div className="flex flex-col items-center gap-4">
+										{whatsAppQr ? (
+											<div className="bg-white p-2 rounded-lg">
+												{/* eslint-disable-next-line @next/next/no-img-element */}
+												<img src={whatsAppQr} alt="WhatsApp QR Code" className="w-48 h-48" />
+											</div>
+										) : (
+											<div className="text-sm text-yellow-500">QR код не получен. Попробуйте обновить.</div>
+										)}
+										<div className="text-center">
+											<p className="text-sm font-medium mb-1">Статус: {whatsAppStatus}</p>
+											<p className="text-xs text-gray-400">
+												Откройте WhatsApp на телефоне {'>'} Связанные устройства {'>'} Привязка устройства
+											</p>
+										</div>
+										<Button variant="secondary" size="sm" onClick={fetchWhatsappStatus}>
+											Обновить QR код
+										</Button>
+									</div>
+								)}
+
+								{/* Test Message Section */}
+								{whatsAppStatus === 'CONNECTED' && (
+									<div className="w-full pt-4 border-t border-gray-700 mt-4">
+										<h3 className="text-sm font-medium mb-3">Тестовое сообщение</h3>
+										<div className="grid grid-cols-1 gap-3">
+											<Input
+												placeholder="Номер телефона (например, 998901234567)"
+												value={testWhatsAppPhone}
+												onChange={(e) => setTestWhatsAppPhone(e.target.value)}
+											/>
+											<Input
+												placeholder="Сообщение"
+												value={testWhatsAppMessage}
+												onChange={(e) => setTestWhatsAppMessage(e.target.value)}
+											/>
+											<Button
+												onClick={handleTestWhatsApp}
+												disabled={testWhatsAppSending || !testWhatsAppPhone}
+												className="w-full sm:w-auto"
+											>
+												{testWhatsAppSending ? 'Отправка...' : 'Отправить тест'}
+											</Button>
+										</div>
+									</div>
+								)}
+							</div>
+						)}
 					</div>
 
 					<div className="flex flex-wrap justify-end gap-3 pt-2">
-						<Button
-							variant="outline"
-							onClick={handleTestTelegram}
-							disabled={telegramTesting || telegramLoading}
-						>
+						<Button variant="outline" onClick={handleTestTelegram} disabled={telegramTesting || telegramLoading}>
 							{telegramTesting ? 'Отправка...' : 'Тест Telegram'}
 						</Button>
 						<Button onClick={handleSaveMessengers} disabled={telegramSaving || telegramLoading}>

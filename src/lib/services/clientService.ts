@@ -1,5 +1,5 @@
 import { apiClient } from '../api/client';
-import type { Client, CreateClientData } from '../interface/client';
+import type { Client, CreateClientData, UpdateClientData } from '../interface/client';
 
 export type { ApiError } from '../api/client';
 
@@ -14,5 +14,13 @@ export const clientService = {
 
 	getClientById: async (id: string): Promise<Client> => {
 		return apiClient.get<Client>(`/client/get/${id}`) as Promise<Client>;
+	},
+
+	updateClient: async (id: string, data: UpdateClientData): Promise<Client> => {
+		return apiClient.put<Client>(`/client/update/${id}`, data);
+	},
+
+	deleteClient: async (id: string): Promise<{ message: string; deletedClient: Client }> => {
+		return apiClient.delete<{ message: string; deletedClient: Client }>(`/client/delete/${id}`);
 	},
 };

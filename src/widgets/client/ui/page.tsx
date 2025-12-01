@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Client } from '@/lib/types/types';
 import { fetchClients } from '@/shared/store/clientSlice';
 import { useAppDispatch, useAppSelector } from '@/shared/store/hooks';
-import { useEffect, useMemo } from 'react';
+import FormModal from '@/widgets/ModalForm/FormModal';
+import { useEffect, useMemo, useState } from 'react';
 import { ClientListItem } from './ClientListItem';
 
 interface ClientsHomePageProps {
@@ -17,6 +18,8 @@ const ClientsHomePage = ({ searchTerm = '', statusFilter = 'all' }: ClientsHomeP
 	const clients = useAppSelector((state) => state.client.clients);
 	const isLoading = useAppSelector((state) => state.client.isLoading);
 	const error = useAppSelector((state) => state.client.error);
+
+	const [selectedClient, setSelectedClient] = useState<{ client: Client; action: 'update' | 'delete' } | null>(null);
 
 	// Component mount bo'lganda backend'dan clients yuklash
 	useEffect(() => {
@@ -65,10 +68,30 @@ const ClientsHomePage = ({ searchTerm = '', statusFilter = 'all' }: ClientsHomeP
 					) : filteredAndSortedClients.length === 0 ? (
 						<div className="text-center py-8 text-gray-400">Клиенты не найдены</div>
 					) : (
-						filteredAndSortedClients.map((client) => <ClientListItem key={client.id} client={client} />)
+						filteredAndSortedClients.map((client) => (
+							<ClientListItem
+								key={client.id}
+								client={client}
+								onEdit={(c) => setSelectedClient({ client: c, action: 'update' })}
+								onDelete={(c) => setSelectedClient({ client: c, action: 'delete' })}
+							/>
+						))
 					)}
 				</CardContent>
 			</Card>
+
+			{selectedClient && (
+				<FormModal
+					table="client"
+					type={selectedClient.action}
+					data={selectedClient.action === 'update' ? selectedClient.client : undefined}
+					id={selectedClient.client.id}
+					open={true}
+					onOpenChange={(open) => {
+						if (!open) setSelectedClient(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 };

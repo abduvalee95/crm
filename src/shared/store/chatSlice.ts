@@ -5,6 +5,7 @@ interface ChatState {
 	conversations: Conversation[];
 	activeConversationId: string | null;
 	messages: Record<string, Message[]>; // conversationId -> messages
+	onlineUsers: string[]; // Online user IDs
 	isLoading: boolean;
 	error: string | null;
 }
@@ -13,6 +14,7 @@ const initialState: ChatState = {
 	conversations: [],
 	activeConversationId: null,
 	messages: {},
+	onlineUsers: [],
 	isLoading: false,
 	error: null,
 };
@@ -82,6 +84,19 @@ const chatSlice = createSlice({
 		setLoading(state, action: PayloadAction<boolean>) {
 			state.isLoading = action.payload;
 		},
+		setOnlineUsers(state, action: PayloadAction<string[]>) {
+			state.onlineUsers = action.payload;
+		},
+		updateUserStatus(state, action: PayloadAction<{ userId: string; isOnline: boolean }>) {
+			const { userId, isOnline } = action.payload;
+			if (isOnline) {
+				if (!state.onlineUsers.includes(userId)) {
+					state.onlineUsers.push(userId);
+				}
+			} else {
+				state.onlineUsers = state.onlineUsers.filter((id) => id !== userId);
+			}
+		},
 		setError(state, action: PayloadAction<string | null>) {
 			state.error = action.payload;
 		},
@@ -96,6 +111,8 @@ export const {
 	addMessage,
 	updateMessageStatus,
 	setLoading,
+	setOnlineUsers,
+	updateUserStatus,
 	setError,
 } = chatSlice.actions;
 

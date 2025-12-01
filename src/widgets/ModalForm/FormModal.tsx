@@ -1,7 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { deleteClient } from '@/shared/store/clientSlice';
 import { deleteDeal } from '@/shared/store/dealSlice';
+import { deleteEmployee } from '@/shared/store/employeeSlice';
 import { useAppDispatch } from '@/shared/store/hooks';
 import { Loader2, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -72,6 +74,10 @@ const FormModal = ({
 		try {
 			if (table === 'deal') {
 				await dispatch(deleteDeal(id)).unwrap();
+			} else if (table === 'client') {
+				await dispatch(deleteClient(id)).unwrap();
+			} else if (table === 'employees') {
+				// await dispatch(deleteEmployee(id)).unwrap(); // Employee slice da deleteEmployee thunk bo'lishi kerak
 			}
 			// Add other tables here if needed
 			handleSuccess();
